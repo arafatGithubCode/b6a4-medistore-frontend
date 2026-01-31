@@ -1,4 +1,4 @@
-import SigninForm from "@/components/auth/signin-form";
+import SigninForm from "@/components/module/auth/signin-form";
 import Image from "next/image";
 
 const SigninPage = () => {

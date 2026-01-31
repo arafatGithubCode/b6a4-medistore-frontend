@@ -1,5 +1,6 @@
 "use client";
 
+import { signupAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -8,10 +9,12 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { getErrorMessage } from "@/helpers/get-error";
 import { signupFormSchema } from "@/validations/signup-form-schema";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
-import FormField from "../common/form-field";
+import { toast } from "sonner";
+import FormField from "../../common/form-field";
 import {
   Card,
   CardContent,
@@ -19,14 +22,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 
 const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
   const [passValue, setPassValue] = useState<String>("");
@@ -42,8 +45,27 @@ const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
     validators: {
       onSubmit: signupFormSchema,
     },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       setPassValue(value.password);
+
+      const toastId = toast.loading("Creating your account...");
+
+      try {
+        const { message, success } = await signupAction(value);
+        if (!success) {
+          toast.error(message, {
+            id: toastId,
+          });
+          return;
+        }
+        toast.success("Account created successfully!", {
+          id: toastId,
+        });
+      } catch (error) {
+        toast.error(getErrorMessage(error), {
+          id: toastId,
+        });
+      }
     },
   });
   return (
@@ -59,6 +81,7 @@ const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
             e.preventDefault();
             form.handleSubmit();
           }}
+          {...props}
         >
           <FieldGroup>
             <form.Field
@@ -105,20 +128,23 @@ const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
             <form.Field
               name="password"
               children={(field) => {
-                return <FormField field={field} type="password" />;
+                return (
+                  <FormField
+                    field={field}
+                    type="password"
+                    hasPasswordField={true}
+                  />
+                );
               }}
             />
             <form.Field
               name="confirmPassword"
               children={(field) => {
-                const confirmPassword = field.state.value;
-                const isPasswordMatch =
-                  passValue === confirmPassword || confirmPassword === "";
                 return (
                   <FormField
                     field={field}
                     type="password"
-                    isPasswordMatch={isPasswordMatch}
+                    hasPasswordField={true}
                   />
                 );
               }}

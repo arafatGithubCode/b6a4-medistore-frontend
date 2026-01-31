@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { signinFormSchema } from "@/validations/signin-form-schema";
 import { useForm } from "@tanstack/react-form";
-import FormField from "../common/form-field";
+import FormField from "../../common/form-field";
 import {
   Card,
   CardContent,
@@ -18,7 +18,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../ui/card";
 
 const SigninForm = ({ className, ...props }: React.ComponentProps<"form">) => {
   const form = useForm({
