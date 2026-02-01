@@ -1,7 +1,7 @@
 "use client";
 
 import { signupAction } from "@/actions/auth";
-import { Button } from "@/components/ui/button";
+import SubmitButton from "@/components/common/submit-button";
 import {
   Field,
   FieldDescription,
@@ -12,6 +12,7 @@ import {
 import { getErrorMessage } from "@/helpers/get-error";
 import { signupFormSchema } from "@/validations/signup-form-schema";
 import { useForm } from "@tanstack/react-form";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import FormField from "../../common/form-field";
@@ -32,7 +33,8 @@ import {
 } from "../../ui/select";
 
 const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
-  const [passValue, setPassValue] = useState<String>("");
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm({
     defaultValues: {
@@ -46,8 +48,7 @@ const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
       onSubmit: signupFormSchema,
     },
     onSubmit: async ({ value }) => {
-      setPassValue(value.password);
-
+      setLoading(true);
       const toastId = toast.loading("Creating your account...");
 
       try {
@@ -61,10 +62,13 @@ const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
         toast.success("Account created successfully!", {
           id: toastId,
         });
+        router.push("/signin");
       } catch (error) {
         toast.error(getErrorMessage(error), {
           id: toastId,
         });
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -153,9 +157,11 @@ const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
         </form>
       </CardContent>
       <CardFooter>
-        <Button form="signup-form" className="w-full">
-          Create Account
-        </Button>
+        <SubmitButton
+          formName="signup-form"
+          label="Create Account"
+          loading={loading}
+        />
       </CardFooter>
     </Card>
   );

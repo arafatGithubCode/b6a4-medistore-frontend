@@ -1,6 +1,7 @@
 "use server";
 
 import { env } from "@/env";
+import { getErrorMessage } from "@/helpers/get-error";
 import { ServerActionResult } from "@/types";
 
 export const signupAction = async (data: {
@@ -30,11 +31,11 @@ export const signupAction = async (data: {
       body: JSON.stringify(signupData),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
+    const result = await response.json();
+    if (result.success === false) {
       return {
         success: false,
-        message: errorData.message || "Signup failed",
+        message: result.message || "Signup failed",
       };
     }
 
@@ -46,7 +47,7 @@ export const signupAction = async (data: {
   } catch (error) {
     return {
       success: false,
-      message: "An error occurred during signup",
+      message: getErrorMessage(error),
     };
   }
 };
