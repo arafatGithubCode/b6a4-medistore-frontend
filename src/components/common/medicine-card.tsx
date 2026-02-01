@@ -1,8 +1,10 @@
 import { IMedicine } from "@/types/medicine-type";
 import Image from "next/image";
+import AddToCart from "./add-to-cart";
 
 const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
   const {
+    id: medicineId,
     name,
     brand,
     description,
@@ -83,7 +85,7 @@ const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
 
         {/* Description */}
         <p
-          className="text-sm line-clamp-2 flex-grow mb-4 leading-relaxed
+          className="text-sm line-clamp-2 grow mb-4 leading-relaxed
           text-slate-600 dark:text-slate-300"
         >
           {description}
@@ -108,17 +110,7 @@ const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
 
           {/* Add to Cart Button */}
           {/* Primary Medical Color: Teal-600 */}
-          <button
-            disabled={!isInStock}
-            className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-sm flex items-center justify-center
-              ${
-                isInStock
-                  ? "bg-teal-600 text-white hover:bg-teal-700 hover:shadow-md dark:bg-teal-500 dark:hover:bg-teal-400"
-                  : "bg-slate-100 text-slate-400 cursor-not-allowed dark:bg-slate-700 dark:text-slate-500"
-              }`}
-          >
-            {isInStock ? "Add to Cart" : "Unavailable"}
-          </button>
+          <AddToCart isInStock={isInStock} item={{ medicineId, quantity: 1 }} />
         </div>
       </div>
     </div>
