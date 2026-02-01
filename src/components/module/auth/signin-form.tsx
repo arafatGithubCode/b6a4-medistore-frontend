@@ -83,7 +83,13 @@ const SigninForm = ({ className, ...props }: React.ComponentProps<"form">) => {
             />
             <form.Field
               name="password"
-              children={(field) => <FormField field={field} type="password" />}
+              children={(field) => (
+                <FormField
+                  field={field}
+                  type="password"
+                  hasPasswordField={true}
+                />
+              )}
             />
           </FieldGroup>
         </form>

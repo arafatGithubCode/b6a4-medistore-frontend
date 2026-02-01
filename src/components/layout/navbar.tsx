@@ -19,8 +19,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import ModeToggle from "./mode-toggle";
+import NavbarUser from "./navbar-user";
 
 interface MenuItem {
   title: string;
@@ -80,6 +82,8 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
+  const { data, error, isPending } = authClient.useSession();
+
   return (
     <section className={cn("py-4 ", className)}>
       <div className="container mx-auto px-4">
@@ -106,13 +110,21 @@ const Navbar = ({
             </div>
           </div>
           <div className="flex gap-2">
+            {isPending ? (
+              <span className="animate-pulse">Loading...</span>
+            ) : data?.user ? (
+              <NavbarUser user={data.user} />
+            ) : (
+              <>
+                <Button asChild variant="outline" size="sm">
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+              </>
+            )}
             <ModeToggle />
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
           </div>
         </nav>
 
