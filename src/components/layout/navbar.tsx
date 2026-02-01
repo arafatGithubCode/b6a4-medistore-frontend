@@ -59,21 +59,17 @@ const Navbar = ({
     url: "/",
     src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
     alt: "logo",
-    title: "Next Blog",
+    title: "Next Shop",
   },
   menu = [
     { title: "Home", url: "/" },
     {
-      title: "Blogs",
-      url: "/blogs",
+      title: "Shop",
+      url: "/shop",
     },
     {
       title: "About",
       url: "/about",
-    },
-    {
-      title: "Dashboard",
-      url: "/dashboard",
     },
   ],
   auth = {
@@ -82,7 +78,7 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
-  const { data, error, isPending } = authClient.useSession();
+  const { data, isPending } = authClient.useSession();
 
   return (
     <section className={cn("py-4 ", className)}>

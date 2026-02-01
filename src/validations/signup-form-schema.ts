@@ -1,4 +1,4 @@
-import { USER_ROLES } from "@/types";
+import { ROLE } from "@/types";
 import * as zod from "zod";
 
 export const signupFormSchema = zod.object({
@@ -7,7 +7,7 @@ export const signupFormSchema = zod.object({
     .string()
     .min(1, "Email is required")
     .email("Invalid email address"),
-  role: zod.enum(USER_ROLES, {
+  role: zod.enum(Object.values(ROLE) as [string, ...string[]], {
     message: "Please select a role",
   }),
   password: zod.string().min(6, "Password must be at least 6 characters"),

@@ -1,4 +1,4 @@
-export type ServerActionResult<T = undefined> = {
+export type TResult<T = undefined> = {
   success: boolean;
   message: string;
   data?: T;

@@ -2,7 +2,7 @@
 
 import { env } from "@/env";
 import { getErrorMessage } from "@/helpers/get-error";
-import { ServerActionResult } from "@/types";
+import { TResult } from "@/types/return-type";
 
 export const signupAction = async (data: {
   name: string;
@@ -10,7 +10,7 @@ export const signupAction = async (data: {
   role: string;
   password: string;
   confirmPassword: string;
-}): Promise<ServerActionResult> => {
+}): Promise<TResult> => {
   try {
     // check if password and confirmPassword match
     if (data.password !== data.confirmPassword) {
