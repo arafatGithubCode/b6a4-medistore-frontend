@@ -20,7 +20,7 @@ const CartItem = ({
       className="flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow"
     >
       {/* Product Image */}
-      <div className="relative w-24 h-24 flex-shrink-0 bg-slate-50 dark:bg-slate-700/50 rounded-lg overflow-hidden">
+      <div className="relative w-24 h-24 shrink-0 bg-slate-50 dark:bg-slate-700/50 rounded-lg overflow-hidden">
         <Image
           src="/medicine.png"
           alt={medicine.name}
