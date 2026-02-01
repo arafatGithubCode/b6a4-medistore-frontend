@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
+import GoogleAuth from "./google-auth";
 
 const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
   const router = useRouter();
@@ -156,12 +157,13 @@ const SignupForm = ({ className, ...props }: React.ComponentProps<"form">) => {
           </FieldGroup>
         </form>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-4">
         <SubmitButton
           formName="signup-form"
           label="Create Account"
           loading={loading}
         />
+        <GoogleAuth mode="signup" />
       </CardFooter>
     </Card>
   );
