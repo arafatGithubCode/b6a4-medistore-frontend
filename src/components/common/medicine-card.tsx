@@ -1,8 +1,15 @@
+import { getCurrentUserCartAction } from "@/actions/cart";
 import { IMedicine } from "@/types/medicine-type";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "../ui/button";
 import AddToCart from "./add-to-cart";
 
-const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
+const MedicineCard = async ({ medicine }: { medicine: IMedicine }) => {
+  const { data } = await getCurrentUserCartAction();
+
+  const isInCart = data?.items.some((item) => item.medicineId === medicine.id);
+
   const {
     id: medicineId,
     name,
@@ -18,8 +25,6 @@ const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
 
   const isInStock = stock > 0;
 
-  // Dynamic Styles for Stock Status
-  // Using Emerald (Green) for health/success and Rose (Red) for alerts
   const stockStyle = isInStock
     ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
     : "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800";
@@ -110,7 +115,16 @@ const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
 
           {/* Add to Cart Button */}
           {/* Primary Medical Color: Teal-600 */}
-          <AddToCart isInStock={isInStock} item={{ medicineId, quantity: 1 }} />
+          {isInStock ? (
+            <Link href="/cart">
+              <Button variant="link">Go Cart</Button>
+            </Link>
+          ) : (
+            <AddToCart
+              isInStock={isInStock}
+              item={{ medicineId, quantity: 1 }}
+            />
+          )}
         </div>
       </div>
     </div>

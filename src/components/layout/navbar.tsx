@@ -22,6 +22,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import ModeToggle from "./mode-toggle";
+import NavbarCart from "./navbar-cart";
 import NavbarUser from "./navbar-user";
 
 interface MenuItem {
@@ -109,7 +110,10 @@ const Navbar = ({
             {isPending ? (
               <span className="animate-pulse">Loading...</span>
             ) : data?.user ? (
-              <NavbarUser user={data.user} />
+              <div className="flex items-center gap-4">
+                <NavbarUser user={data.user} />
+                <NavbarCart />
+              </div>
             ) : (
               <>
                 <Button asChild variant="outline" size="sm">

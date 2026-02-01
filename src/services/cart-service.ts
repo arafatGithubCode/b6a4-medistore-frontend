@@ -1,5 +1,6 @@
 import { env } from "@/env";
-import { TResult } from "@/types";
+import { getErrorMessage } from "@/helpers/get-error";
+import { ICart, TResult } from "@/types";
 import { cookies } from "next/headers";
 
 export const cartService = {
@@ -48,6 +49,39 @@ export const cartService = {
       return {
         success: false,
         message: "Failed to add item to cart.",
+      };
+    }
+  },
+
+  getCurrentUserCart: async (): Promise<TResult<ICart>> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/carts/`;
+
+      const cookieStore = await cookies();
+
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+      });
+      const result = await response.json();
+
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to fetch cart.",
+        };
+      }
+      return {
+        success: result.success,
+        message: result.message,
+        data: result.data[0],
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error) || "Failed to fetch cart.",
       };
     }
   },
