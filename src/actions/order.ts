@@ -36,3 +36,17 @@ export const getOrderByIdAction = async (
     };
   }
 };
+
+export const getAllOrdersAction = async (): Promise<TResult<IOrder[]>> => {
+  try {
+    const { message, success, data, pagination } =
+      await orderServices.getAllOrders();
+    return { success, message, data, pagination };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) || "An error occurred while fetching orders.",
+    };
+  }
+};
