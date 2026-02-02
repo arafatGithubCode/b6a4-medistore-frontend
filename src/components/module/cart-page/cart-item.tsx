@@ -41,6 +41,17 @@ const CartItem = ({
           <p className="text-sm text-slate-600 dark:text-slate-300">
             Price: <span className="font-semibold">৳{medicine.price}</span>
           </p>
+          <div className="mt-1">
+            {medicine.stock > 0 ? (
+              <span className="text-sm text-green-600 dark:text-green-400">
+                In Stock: {medicine.stock - item.quantity} pcs
+              </span>
+            ) : (
+              <span className="text-sm text-red-600 dark:text-red-400">
+                Out of Stock
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Quantity & Actions */}
@@ -59,7 +70,7 @@ const CartItem = ({
               {item.quantity}
             </span>
             <button
-              onClick={() => handleIncrementQuantity(item.id)}
+              onClick={() => handleIncrementQuantity(item.medicineId)}
               disabled={item.quantity >= medicine.stock}
               className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-600 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Increase quantity"

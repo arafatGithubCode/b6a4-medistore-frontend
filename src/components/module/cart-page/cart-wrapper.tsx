@@ -18,7 +18,7 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
 
     // delete from db
     await deleteCartItemAction(medicineId);
-    
+
     // Trigger navbar cart update
     window.dispatchEvent(new Event("cartUpdated"));
   };
@@ -27,7 +27,10 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.medicineId === medicineId && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
+          ? {
+              ...item,
+              quantity: item.quantity - 1,
+            }
           : item,
       ),
     );
@@ -37,7 +40,10 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.medicineId === medicineId && item.quantity < item.medicine.stock
-          ? { ...item, quantity: item.quantity + 1 }
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+            }
           : item,
       ),
     );
