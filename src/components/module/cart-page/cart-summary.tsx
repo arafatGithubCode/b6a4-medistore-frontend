@@ -1,13 +1,16 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const CartSummary = ({
   calculateSubtotal,
   calculateTax,
   calculateTotal,
+  cartId,
 }: {
   calculateSubtotal: () => number;
   calculateTax: () => number;
   calculateTotal: () => number;
+  cartId: string | undefined;
 }) => {
   return (
     <div className="lg:col-span-1 mt-14">
@@ -32,13 +35,17 @@ const CartSummary = ({
           <span>৳{calculateTotal().toFixed(2)}</span>
         </div>
 
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors">
-          Proceed to Checkout
-        </Button>
+        <Link href="/checkout">
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors">
+            Proceed to Checkout
+          </Button>
+        </Link>
 
-        <Button variant="outline" className="w-full">
-          Continue Shopping
-        </Button>
+        <Link href="/shop">
+          <Button variant="outline" className="w-full">
+            Continue Shopping
+          </Button>
+        </Link>
       </div>
     </div>
   );

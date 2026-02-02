@@ -83,6 +83,7 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
   const calculateTotal = () => {
     return calculateSubtotal() + calculateTax();
   };
+
   return (
     <div className="p-6 container mx-auto px-4">
       {cartItems.length > 0 ? (
@@ -109,6 +110,7 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
             calculateTotal={calculateTotal}
             calculateSubtotal={calculateSubtotal}
             calculateTax={calculateTax}
+            cartId={cart?.id}
           />
         </div>
       ) : (
