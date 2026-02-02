@@ -1,15 +1,17 @@
 "use client";
 
+import { placeOrderAction } from "@/actions/order";
 import { Button } from "@/components/ui/button";
-import { ICart } from "@/types";
+import { getErrorMessage } from "@/helpers/get-error";
+import { ICart, PaymentMethodType, ShippingAddress } from "@/types";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { CheckoutSummary } from "./checkout-summary";
-import { PaymentMethod, PaymentMethodType } from "./payment-method";
-import { ShippingAddress, ShippingAddressForm } from "./shipping-address-form";
+import { PaymentMethod } from "./payment-method";
+import { ShippingAddressForm } from "./shipping-address-form";
 
 interface CheckoutWrapperProps {
   cart: ICart | undefined;
@@ -27,7 +29,8 @@ export const CheckoutWrapper = ({ cart }: CheckoutWrapperProps) => {
     zipCode: "",
     country: "Bangladesh",
   });
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>("card");
+  const [paymentMethod, setPaymentMethod] =
+    useState<PaymentMethodType>("CASH_ON_DELIVERY");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const isFormValid = () => {
@@ -54,9 +57,34 @@ export const CheckoutWrapper = ({ cart }: CheckoutWrapperProps) => {
       return;
     }
 
-    setIsProcessing(true);
+    // construct order data
+    const orderData = {
+      items: cart.items,
+      shippingAddress,
+      paymentMethod,
+    };
 
-    console.log(paymentMethod);
+    const toastId = toast.loading("Placing your order...");
+
+    try {
+      setIsProcessing(true);
+      const { success, data } = await placeOrderAction(orderData);
+
+      console.log("Order data:", { data });
+
+      if (success === false) {
+        toast.error("Failed to place order", { id: toastId });
+        return;
+      }
+      toast.success("Order placed successfully!", { id: toastId });
+      router.push(`/success/${data?.id}`);
+    } catch (error) {
+      toast.error(getErrorMessage(error), {
+        id: toastId,
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (!cart || cart.items.length === 0) {

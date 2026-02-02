@@ -41,7 +41,7 @@ const CartSummary = ({
           </Button>
         </Link>
 
-        <Link href="/shop">
+        <Link href="/shop" className="mt-3 inline-block w-full">
           <Button variant="outline" className="w-full">
             Continue Shopping
           </Button>

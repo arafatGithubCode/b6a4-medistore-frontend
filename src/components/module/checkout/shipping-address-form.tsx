@@ -3,19 +3,8 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-import { User } from "@/types";
+import { ShippingAddress, User } from "@/types";
 import { useState } from "react";
-
-export interface ShippingAddress {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
 
 interface ShippingAddressFormProps {
   onAddressChange: (address: ShippingAddress) => void;

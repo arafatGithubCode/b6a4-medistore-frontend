@@ -1,9 +1,8 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
+import { PaymentMethodType } from "@/types";
 import { useState } from "react";
-
-export type PaymentMethodType = "card" | "cod" | "mobile";
 
 interface PaymentMethodProps {
   onPaymentMethodChange: (method: PaymentMethodType) => void;
@@ -13,7 +12,7 @@ export const PaymentMethod = ({
   onPaymentMethodChange,
 }: PaymentMethodProps) => {
   const [selectedMethod, setSelectedMethod] =
-    useState<PaymentMethodType>("cod");
+    useState<PaymentMethodType>("CASH_ON_DELIVERY");
 
   const handleMethodChange = (method: PaymentMethodType) => {
     setSelectedMethod(method);
@@ -29,9 +28,9 @@ export const PaymentMethod = ({
       <div className="space-y-3">
         {/* Cash on Delivery */}
         <div
-          onClick={() => handleMethodChange("cod")}
+          onClick={() => handleMethodChange("CASH_ON_DELIVERY")}
           className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
-            selectedMethod === "cod"
+            selectedMethod === "CASH_ON_DELIVERY"
               ? "border-blue-600 bg-blue-50 dark:bg-blue-950/20"
               : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
           }`}
@@ -39,9 +38,9 @@ export const PaymentMethod = ({
           <input
             type="radio"
             name="payment"
-            value="cod"
-            checked={selectedMethod === "cod"}
-            onChange={() => handleMethodChange("cod")}
+            value="CASH_ON_DELIVERY"
+            checked={selectedMethod === "CASH_ON_DELIVERY"}
+            onChange={() => handleMethodChange("CASH_ON_DELIVERY")}
             className="w-4 h-4 text-blue-600"
           />
           <div className="ml-4 flex items-center gap-3">
@@ -70,7 +69,7 @@ export const PaymentMethod = ({
         </div>
       </div>
 
-      {selectedMethod === "cod" && (
+      {selectedMethod === "CASH_ON_DELIVERY" && (
         <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-800">
           <p className="text-sm text-amber-800 dark:text-amber-300">
             Pay with cash when your order is delivered to your doorstep.
