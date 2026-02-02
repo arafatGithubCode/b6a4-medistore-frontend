@@ -19,6 +19,20 @@ export const placeOrderAction = async (
         getErrorMessage(error) || "An error occurred while placing the order.",
     };
   }
+};
 
-  return { success: true, message: "Order placed successfully" };
+export const getOrderByIdAction = async (
+  orderId: string,
+): Promise<TResult<IOrder>> => {
+  try {
+    const { message, success, data } =
+      await orderServices.getOrderById(orderId);
+    return { success, message, data };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) || "An error occurred while fetching the order.",
+    };
+  }
 };

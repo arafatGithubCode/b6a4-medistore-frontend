@@ -1,3 +1,4 @@
+import { getOrderByIdAction } from "@/actions/order";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Package, Truck } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +9,27 @@ const SuccessPage = async ({
   params: Promise<{ orderId: string }>;
 }) => {
   const { orderId } = await params;
+  const { success, data } = await getOrderByIdAction(orderId);
+
+  if (!success || !data) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 md:p-12">
+            <div className="flex flex-col items-center text-center">
+              <h1 className="mt-6 text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
+                Order Not Found
+              </h1>
+              <p className="mt-3 text-slate-600 dark:text-slate-400 max-w-xl">
+                We couldn't find an order with the provided ID. Please check
+                your order details and try again.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-3xl mx-auto">
@@ -17,7 +39,7 @@ const SuccessPage = async ({
               <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400" />
             </div>
             <h1 className="mt-6 text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-              Order Placed Successfully! #${orderId}
+              Order Placed Successfully!
             </h1>
             <p className="mt-3 text-slate-600 dark:text-slate-400 max-w-xl">
               Thank you for your purchase. Your order has been confirmed and
