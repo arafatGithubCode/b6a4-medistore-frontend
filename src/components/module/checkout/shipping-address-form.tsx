@@ -2,6 +2,8 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth-client";
+import { User } from "@/types";
 import { useState } from "react";
 
 export interface ShippingAddress {
@@ -22,15 +24,22 @@ interface ShippingAddressFormProps {
 export const ShippingAddressForm = ({
   onAddressChange,
 }: ShippingAddressFormProps) => {
+  const { data: session } = authClient.useSession();
+
+  let user: User | null = null;
+  if (session && session.user) {
+    user = session.user as unknown as User;
+  }
+
   const [formData, setFormData] = useState<ShippingAddress>({
-    fullName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "Bangladesh",
+    fullName: user?.name || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    address: user?.address || "",
+    city: user?.city || "",
+    state: user?.state || "",
+    zipCode: user?.zipCode || "",
+    country: user?.country || "Bangladesh",
   });
 
   const handleChange = (
@@ -63,7 +72,7 @@ export const ShippingAddressForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address *</Label>
+            <Label htmlFor="email">Contact Email Address *</Label>
             <Input
               id="email"
               name="email"

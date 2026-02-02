@@ -56,12 +56,7 @@ export const CheckoutWrapper = ({ cart }: CheckoutWrapperProps) => {
 
     setIsProcessing(true);
 
-    // Simulate order processing
-    setTimeout(() => {
-      toast.success("Order placed successfully!");
-      setIsProcessing(false);
-      // router.push("/dashboard"); // Redirect to order confirmation
-    }, 2000);
+    console.log(paymentMethod);
   };
 
   if (!cart || cart.items.length === 0) {

@@ -8,6 +8,12 @@ export interface User {
   role: (typeof ROLE)[keyof typeof ROLE];
   createdAt: string;
   updatedAt: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
 }
 
 export interface Session {
