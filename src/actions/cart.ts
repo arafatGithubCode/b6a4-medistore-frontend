@@ -35,3 +35,22 @@ export const getCurrentUserCartAction = async (): Promise<TResult<ICart>> => {
     };
   }
 };
+
+export const deleteCartItemAction = async (
+  medicineId: string,
+): Promise<TResult> => {
+  try {
+    const { success, message, data } =
+      await cartService.deleteCartItem(medicineId);
+
+    revalidateTag("cart", "max");
+    return { success, message, data };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) ||
+        "An error occurred while deleting the cart item.",
+    };
+  }
+};

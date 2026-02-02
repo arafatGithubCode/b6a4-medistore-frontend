@@ -27,7 +27,6 @@ export const cartService = {
           "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-        next: { tags: ["cart"] },
         body: JSON.stringify(items),
       });
 
@@ -64,6 +63,7 @@ export const cartService = {
         headers: {
           Cookie: cookieStore.toString(),
         },
+        next: { tags: ["cart"] },
       });
       const result = await response.json();
 
@@ -82,6 +82,40 @@ export const cartService = {
       return {
         success: false,
         message: getErrorMessage(error) || "Failed to fetch cart.",
+      };
+    }
+  },
+
+  deleteCartItem: async (medicineId: string): Promise<TResult> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/carts/item`;
+
+      const cookieStore = await cookies();
+      const response = await fetch(API_URL, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ medicineId }),
+      });
+
+      const result = await response.json();
+
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to delete cart item.",
+        };
+      }
+      return {
+        success: result.success,
+        message: result.message,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error) || "Failed to delete cart item.",
       };
     }
   },

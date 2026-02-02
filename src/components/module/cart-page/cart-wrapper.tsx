@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteCartItemAction } from "@/actions/cart";
 import { Button } from "@/components/ui/button";
 import { ICart, ICartItem } from "@/types";
 import Image from "next/image";
@@ -10,24 +11,32 @@ import CartSummary from "./cart-summary";
 const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
   const [cartItems, setCartItems] = useState<ICartItem[]>(cart?.items || []);
 
-  const handleDeleteItem = (itemId: string) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+  const handleDeleteItem = async (medicineId: string) => {
+    setCartItems((prevItems) =>
+      prevItems.filter((item) => item.medicineId !== medicineId),
+    );
+
+    // delete from db
+    await deleteCartItemAction(medicineId);
+    
+    // Trigger navbar cart update
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  const handleDecrementQuantity = (itemId: string) => {
+  const handleDecrementQuantity = (medicineId: string) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === itemId && item.quantity > 1
+        item.medicineId === medicineId && item.quantity > 1
           ? { ...item, quantity: item.quantity - 1 }
           : item,
       ),
     );
   };
 
-  const handleIncrementQuantity = (itemId: string) => {
+  const handleIncrementQuantity = (medicineId: string) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === itemId && item.quantity < item.medicine.stock
+        item.medicineId === medicineId && item.quantity < item.medicine.stock
           ? { ...item, quantity: item.quantity + 1 }
           : item,
       ),

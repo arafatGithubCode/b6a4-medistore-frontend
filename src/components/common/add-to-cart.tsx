@@ -41,6 +41,9 @@ const AddToCart = ({
       toast.success(message || "Item added to cart successfully.", {
         id: toastId,
       });
+      
+      // Trigger navbar cart update
+      window.dispatchEvent(new Event("cartUpdated"));
     } catch (error) {
       toast.error(getErrorMessage(error), { id: toastId });
     } finally {

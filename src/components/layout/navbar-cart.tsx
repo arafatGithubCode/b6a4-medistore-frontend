@@ -19,6 +19,8 @@ import {
 
 const NavbarCart = () => {
   const [cart, setCart] = useState<ICart | undefined>(undefined);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+
   useEffect(() => {
     (async () => {
       const { success, data } = await getCurrentUserCartAction();
@@ -26,6 +28,15 @@ const NavbarCart = () => {
         setCart(data);
       }
     })();
+  }, [refetchTrigger]);
+
+  // Listen for cart updates
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      setRefetchTrigger((prev) => prev + 1);
+    };
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, []);
 
   return (

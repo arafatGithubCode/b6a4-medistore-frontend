@@ -115,7 +115,7 @@ const MedicineCard = async ({ medicine }: { medicine: IMedicine }) => {
 
           {/* Add to Cart Button */}
           {/* Primary Medical Color: Teal-600 */}
-          {isInStock ? (
+          {isInCart ? (
             <Link href="/cart">
               <Button variant="link">Go Cart</Button>
             </Link>

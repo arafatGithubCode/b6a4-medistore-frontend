@@ -9,9 +9,9 @@ const CartItem = ({
   handleDeleteItem,
 }: {
   item: ICartItem;
-  handleIncrementQuantity: (itemId: string) => void;
-  handleDecrementQuantity: (itemId: string) => void;
-  handleDeleteItem: (itemId: string) => void;
+  handleIncrementQuantity: (medicineId: string) => void;
+  handleDecrementQuantity: (medicineId: string) => void;
+  handleDeleteItem: (medicineId: string) => void;
 }) => {
   const medicine = item.medicine;
   return (
@@ -48,7 +48,7 @@ const CartItem = ({
           {/* Quantity Control */}
           <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-700 rounded-lg p-1">
             <button
-              onClick={() => handleDecrementQuantity(item.id)}
+              onClick={() => handleDecrementQuantity(item.medicineId)}
               disabled={item.quantity <= 1}
               className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-600 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Decrease quantity"
@@ -79,7 +79,7 @@ const CartItem = ({
               </p>
             </div>
             <button
-              onClick={() => handleDeleteItem(item.id)}
+              onClick={() => handleDeleteItem(item.medicineId)}
               className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-red-600 dark:text-red-400"
               title="Delete item"
             >
