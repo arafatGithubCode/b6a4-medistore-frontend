@@ -119,4 +119,42 @@ export const cartService = {
       };
     }
   },
+
+  decrementCartItemQuantity: async (
+    medicineId: string,
+    quantity: number,
+  ): Promise<TResult> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/carts/decrement/${medicineId}`;
+
+      const cookieStore = await cookies();
+      const response = await fetch(API_URL, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ quantity }),
+      });
+      console.log("Response:", response);
+      const result = await response.json();
+      console.log("Result:", result);
+
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to decrement cart item quantity.",
+        };
+      }
+
+      return { success: true, message: "Decremented successfully" };
+    } catch (error) {
+      console.error("Error in decrementCartItemQuantity:", error);
+      return {
+        success: false,
+        message:
+          getErrorMessage(error) || "Failed to decrement cart item quantity.",
+      };
+    }
+  },
 };

@@ -54,3 +54,22 @@ export const deleteCartItemAction = async (
     };
   }
 };
+
+export const decrementCartItemQuantityAction = async (
+  medicineId: string,
+  quantity: number,
+): Promise<TResult> => {
+  try {
+    const { success, message, data } =
+      await cartService.decrementCartItemQuantity(medicineId, quantity);
+    revalidateTag("cart", "max");
+    return { success, message, data };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) ||
+        "An error occurred while decrementing the cart item quantity.",
+    };
+  }
+};

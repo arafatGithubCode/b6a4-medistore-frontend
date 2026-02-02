@@ -1,6 +1,10 @@
 "use client";
 
-import { deleteCartItemAction } from "@/actions/cart";
+import {
+  addToCartAction,
+  decrementCartItemQuantityAction,
+  deleteCartItemAction,
+} from "@/actions/cart";
 import { Button } from "@/components/ui/button";
 import { ICart, ICartItem } from "@/types";
 import Image from "next/image";
@@ -23,7 +27,7 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  const handleDecrementQuantity = (medicineId: string) => {
+  const handleDecrementQuantity = async (medicineId: string) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.medicineId === medicineId && item.quantity > 1
@@ -34,9 +38,15 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
           : item,
       ),
     );
+
+    // decrement in db
+    await decrementCartItemQuantityAction(medicineId, 1);
+
+    // Trigger navbar cart update
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  const handleIncrementQuantity = (medicineId: string) => {
+  const handleIncrementQuantity = async (medicineId: string) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.medicineId === medicineId && item.quantity < item.medicine.stock
@@ -47,6 +57,16 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
           : item,
       ),
     );
+
+    const updatedQuantity = cartItems.find(
+      (item) => item.medicineId === medicineId,
+    )?.quantity;
+
+    // update in db
+    await addToCartAction({ medicineId, quantity: updatedQuantity! + 1 });
+
+    // Trigger navbar cart update
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const calculateSubtotal = () => {
