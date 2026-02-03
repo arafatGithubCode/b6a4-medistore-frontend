@@ -16,6 +16,7 @@ import { adminRoutes } from "@/routes/admin-routes";
 import { customerRoutes } from "@/routes/customer-routes";
 import { sellerRoutes } from "@/routes/seller-routes";
 import { ROLE, TRoute } from "@/types";
+import Link from "next/link";
 import AppDashboardItem from "./app-dashboard-item";
 
 export function AppSidebar({
@@ -40,7 +41,9 @@ export function AppSidebar({
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <div>Logo</div>
+        <Link href="/" className="text-lg font-bold ">
+          MediStore
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}

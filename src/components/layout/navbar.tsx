@@ -20,6 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { authClient } from "@/lib/auth-client";
+import { ROLE, User } from "@/types";
 import Link from "next/link";
 import ModeToggle from "./mode-toggle";
 import NavbarCart from "./navbar-cart";
@@ -81,6 +82,8 @@ const Navbar = ({
 }: Navbar1Props) => {
   const { data, isPending } = authClient.useSession();
 
+  const userWithRole = data?.user as User | undefined;
+
   return (
     <section className={cn("py-4 ", className)}>
       <div className="container mx-auto px-4">
@@ -88,16 +91,9 @@ const Navbar = ({
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <img
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
-              />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
-              </span>
-            </a>
+            <Link href={"/"} className="text-lg font-bold">
+              MediStore
+            </Link>
             <div className="flex items-center">
               <NavigationMenu>
                 <NavigationMenuList>
@@ -112,7 +108,7 @@ const Navbar = ({
             ) : data?.user ? (
               <div className="flex items-center gap-4">
                 <NavbarUser user={data.user} />
-                <NavbarCart />
+                {userWithRole?.role === ROLE.CUSTOMER && <NavbarCart />}
               </div>
             ) : (
               <>
