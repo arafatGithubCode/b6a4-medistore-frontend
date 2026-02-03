@@ -1,5 +1,7 @@
 import { getAllOrdersAction } from "@/actions/order";
 import { OrdersList } from "@/components/module/orders/orders-list";
+import { ProfileDisplay } from "@/components/module/profile/profile-display";
+import { userServices } from "@/services/user-service";
 import { ShoppingBag } from "lucide-react";
 
 const Dashboard = async ({
@@ -8,6 +10,9 @@ const Dashboard = async ({
   searchParams: Promise<{ tab?: string }>;
 }) => {
   const { tab } = await searchParams;
+
+  const { data: session } = await userServices.getUserSession();
+  const user = session?.user;
 
   // order tab
   if (tab === "orders") {
@@ -40,17 +45,12 @@ const Dashboard = async ({
         )}
       </div>
     );
-  } else {
-    return (
-      <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome to your dashboard. Use the navigation to access different
-          sections.
-        </p>
-      </div>
-    );
   }
+  return (
+    <div className="container mx-auto py-8 px-4">
+      {user ? <ProfileDisplay user={user} /> : null}
+    </div>
+  );
 };
 
 export default Dashboard;
