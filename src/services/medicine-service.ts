@@ -1,49 +1,87 @@
 import { env } from "@/env";
-import { FilterOptions, TResult } from "@/types";
+import { getErrorMessage } from "@/helpers/get-error";
+import { FilterOptions, ICacheOptions, TResult } from "@/types";
 import { IMedicine } from "@/types/medicine-type";
-
-interface ICacheOptions {
-  cache?: RequestCache;
-  revalidate?: number;
-}
+import { cookies } from "next/headers";
 
 export const medicineService = {
   getMedicines: async (
     filter?: FilterOptions,
     cacheOptions?: ICacheOptions,
   ): Promise<TResult<IMedicine[]>> => {
-    const API_URL = `${env.BACKEND_URL}/api/v1/medicines/`;
-    const url = new URL(API_URL);
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/`;
+      const url = new URL(API_URL);
 
-    if (filter) {
-      Object.entries(filter).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== "") {
-          url.searchParams.append(key, value.toString());
-        }
+      if (filter) {
+        Object.entries(filter).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            url.searchParams.append(key, value.toString());
+          }
+        });
+      }
+
+      const config: RequestInit = {
+        cache: "default",
+        next: { revalidate: 1 * 60 * 60 * 24, tags: ["medicines"] },
+      };
+
+      if (cacheOptions?.cache) {
+        config.cache = cacheOptions.cache;
+      }
+
+      if (cacheOptions?.revalidate) {
+        config.next = {
+          revalidate: cacheOptions.revalidate,
+          tags: ["medicines"],
+        };
+      }
+
+      const response = await fetch(url.toString(), config);
+      const result = await response.json();
+
+      return {
+        success: result.success,
+        message: result.message,
+        data: result.data as IMedicine[],
+        pagination: result.pagination,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error),
+      };
+    }
+  },
+  createMedicine: async (
+    medicineData: Omit<
+      IMedicine,
+      "id" | "slug" | "createdAt" | "updatedAt" | "sellerId"
+    >,
+  ): Promise<TResult<IMedicine>> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/`;
+      const cookieStore = await cookies();
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(medicineData),
       });
+      const result = await response.json();
+      return {
+        success: result.success,
+        message: result.message,
+        data: result.data as IMedicine,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error),
+      };
     }
-
-    const config: RequestInit = {
-      cache: "default",
-      next: { revalidate: 1 * 60 * 60 * 24 },
-    };
-
-    if (cacheOptions?.cache) {
-      config.cache = cacheOptions.cache;
-    }
-
-    if (cacheOptions?.revalidate) {
-      config.next = { revalidate: cacheOptions.revalidate };
-    }
-
-    const response = await fetch(url.toString(), config);
-    const result = await response.json();
-
-    return {
-      success: result.success,
-      message: result.message,
-      data: result.data as IMedicine[],
-      pagination: result.pagination,
-    };
   },
 };

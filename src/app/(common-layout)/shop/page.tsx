@@ -1,8 +1,8 @@
+import { getMedicinesAction } from "@/actions/medicine";
 import MedicineCard from "@/components/common/medicine-card";
-import { medicineService } from "@/services/medicine-service";
 
 const ShopPage = async () => {
-  const { success, data } = await medicineService.getMedicines();
+  const { success, data } = await getMedicinesAction();
   return (
     <div>
       <div className="bg-blue-50 dark:bg-blue-900/10 p-8 text-center shadow-xs">

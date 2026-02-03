@@ -34,3 +34,8 @@ export interface PaginationOptions {
   sortBy: string;
   sortOrder: string;
 }
+
+export interface ICacheOptions {
+  cache?: RequestCache;
+  revalidate?: number;
+}

@@ -18,7 +18,7 @@ export interface IMedicine {
   categoryId: string;
 }
 
-enum DosageForm {
+export enum DosageForm {
   TABLET,
   CAPSULE,
   SYRUP,
@@ -31,7 +31,7 @@ enum DosageForm {
   POWDER,
 }
 
-enum Unit {
+export enum Unit {
   MG,
   ML,
   G,
@@ -39,7 +39,7 @@ enum Unit {
   MCG,
 }
 
-enum MedicineStatus {
+export enum MedicineStatus {
   AVAILABLE,
   OUT_OF_STOCK,
   DISCONTINUED,

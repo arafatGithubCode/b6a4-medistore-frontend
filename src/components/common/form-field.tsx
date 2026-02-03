@@ -17,12 +17,14 @@ interface FormFieldProps {
   };
   type?: string;
   hasPasswordField?: boolean;
+  label?: string;
 }
 
 const FormField = ({
   field,
   type = "text",
   hasPasswordField = false,
+  label,
 }: FormFieldProps) => {
   const { name, state, handleChange } = field;
   const { meta, value } = state;
@@ -32,7 +34,7 @@ const FormField = ({
 
   return (
     <Field data-invalid={isInvalid}>
-      <FieldLabel htmlFor={name}>{getCapitalize(name)}</FieldLabel>
+      <FieldLabel htmlFor={name}>{label || getCapitalize(name)}</FieldLabel>
       <div className="relative">
         <Input
           type={showPassword ? "text" : type}
