@@ -4,7 +4,7 @@ export const customerRoutes: TRoute[] = [
   {
     title: "Customer",
     items: [
-      { title: "Orders", tab: "orders" },
+      { title: "My orders", tab: "orders" },
       { title: "Profile", tab: "profile" },
     ],
   },

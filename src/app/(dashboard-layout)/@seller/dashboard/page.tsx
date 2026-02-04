@@ -3,10 +3,14 @@ import {
   getMedicineByIdAction,
   getMedicineBySellerIdAction,
 } from "@/actions/medicine";
+import { getAllOrdersOfSellerAction } from "@/actions/order";
+
 import MedicineCard from "@/components/common/medicine-card";
 import AddMedicineForm from "@/components/module/medicine/add-medicine";
+import { OrdersList } from "@/components/module/orders";
 import { ProfileDisplay } from "@/components/module/profile/profile-display";
 import { userServices } from "@/services/user-service";
+import { ShoppingBag } from "lucide-react";
 
 const Dashboard = async ({
   searchParams,
@@ -66,6 +70,36 @@ const Dashboard = async ({
     return (
       <div className="container mx-auto py-8">
         <AddMedicineForm categories={categories} medicine={data} />
+      </div>
+    );
+  }
+
+  // order tab
+  if (tab === "orders") {
+    const { data: orders, success } = await getAllOrdersOfSellerAction();
+    return (
+      <div className="container mx-auto py-8 px-4 space-y-8">
+        {/* Page Header */}
+        <div className="flex items-center gap-3 mb-8">
+          <div className="p-3 bg-primary/10 rounded-lg">
+            <ShoppingBag className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">My Orders</h1>
+            <p className="text-muted-foreground">
+              Track and manage your order history
+            </p>
+          </div>
+        </div>
+
+        {/* Orders List */}
+        {success && orders && orders.length > 0 ? (
+          <OrdersList orders={orders} />
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">You have no orders yet.</p>
+          </div>
+        )}
       </div>
     );
   }

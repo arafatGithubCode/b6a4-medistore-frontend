@@ -1,4 +1,4 @@
-import { getAllOrdersAction } from "@/actions/order";
+import { getAllOrdersOfCustomerAction } from "@/actions/order";
 import { OrdersList } from "@/components/module/orders/orders-list";
 import { ProfileDisplay } from "@/components/module/profile/profile-display";
 import { userServices } from "@/services/user-service";
@@ -16,7 +16,7 @@ const Dashboard = async ({
 
   // order tab
   if (tab === "orders") {
-    const { data: orders } = await getAllOrdersAction();
+    const { data: orders } = await getAllOrdersOfCustomerAction();
 
     return (
       <div className="container mx-auto py-8 px-4 space-y-8">

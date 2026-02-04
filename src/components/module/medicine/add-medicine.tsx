@@ -37,7 +37,7 @@ import {
 } from "@/types/medicine-type";
 import { addMedicineSchema } from "@/validations/add-medicine-schema";
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -67,6 +67,7 @@ const AddMedicineForm = ({
   const [isOTCOnly, setIsOTCOnly] = useState<boolean>(oldIsOTCOnly || false);
 
   const router = useRouter();
+  const params = new URLSearchParams(useSearchParams());
 
   const form = useForm({
     defaultValues: {
@@ -140,6 +141,8 @@ const AddMedicineForm = ({
           toast.success("Medicine updated successfully!", {
             id: toastId,
           });
+
+          params.delete("medicineId");
           router.push("/dashboard/?tab=medicines");
         } else {
           const { success } = await createMedicineAction({

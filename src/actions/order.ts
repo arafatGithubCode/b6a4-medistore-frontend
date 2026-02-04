@@ -37,10 +37,28 @@ export const getOrderByIdAction = async (
   }
 };
 
-export const getAllOrdersAction = async (): Promise<TResult<IOrder[]>> => {
+export const getAllOrdersOfCustomerAction = async (): Promise<
+  TResult<IOrder[]>
+> => {
   try {
     const { message, success, data, pagination } =
-      await orderServices.getAllOrders();
+      await orderServices.getAllOrdersOfCustomer();
+    return { success, message, data, pagination };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) || "An error occurred while fetching orders.",
+    };
+  }
+};
+
+export const getAllOrdersOfSellerAction = async (): Promise<
+  TResult<IOrder[]>
+> => {
+  try {
+    const { message, success, data, pagination } =
+      await orderServices.getAllOrdersOfSeller();
     return { success, message, data, pagination };
   } catch (error) {
     return {

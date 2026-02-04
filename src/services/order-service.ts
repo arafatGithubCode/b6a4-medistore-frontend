@@ -72,9 +72,40 @@ export const orderServices = {
       };
     }
   },
-  getAllOrders: async (): Promise<TResult<IOrder[]>> => {
+  getAllOrdersOfCustomer: async (): Promise<TResult<IOrder[]>> => {
     try {
       const API_URL = `${env.BACKEND_URL}/api/v1/orders/`;
+      const cookieStore = await cookies();
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+      });
+      const result = await response.json();
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to fetch orders",
+        };
+      }
+      return {
+        success: true,
+        message: "Orders fetched successfully",
+        data: result.data,
+        pagination: result.pagination,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error) || "Failed to fetch orders",
+      };
+    }
+  },
+  getAllOrdersOfSeller: async (): Promise<TResult<IOrder[]>> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/orders/seller`;
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "GET",

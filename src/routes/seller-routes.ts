@@ -6,7 +6,7 @@ export const sellerRoutes: TRoute[] = [
     items: [
       { title: "Add a medicine", tab: "add-medicine" },
       { title: "My Medicines", tab: "medicines" },
-      { title: "Orders", tab: "orders" },
+      { title: "All Orders", tab: "orders" },
       { title: "Profile", tab: "profile" },
     ],
   },
