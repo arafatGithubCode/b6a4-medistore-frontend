@@ -45,7 +45,6 @@ export const getAllOrdersOfCustomerAction = async (): Promise<
     const { message, success, data, pagination } =
       await orderServices.getAllOrdersOfCustomer();
 
-    revalidateTag("orders-customer", "max");
     return { success, message, data, pagination };
   } catch (error) {
     return {
@@ -82,6 +81,7 @@ export const updateOrderStatusAction = async (
       status,
     );
     revalidateTag("orders-seller", "max");
+    revalidateTag("orders-customer", "max");
     return { success, message, data };
   } catch (error) {
     return {
