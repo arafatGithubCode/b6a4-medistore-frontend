@@ -31,3 +31,12 @@ export interface IOrder {
   createdAt: string;
   updatedAt: string;
 }
+
+export const OrderStatus = {
+  PLACED: "PLACED",
+  CONFIRMED: "CONFIRMED",
+  PROCESSING: "PROCESSING",
+  SHIPPED: "SHIPPED",
+  DELIVERED: "DELIVERED",
+  CANCELLED: "CANCELLED",
+} as const;

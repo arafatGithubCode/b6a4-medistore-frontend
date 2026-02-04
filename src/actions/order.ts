@@ -3,6 +3,7 @@
 import { getErrorMessage } from "@/helpers/get-error";
 import { orderServices } from "@/services/order-service";
 import { IOrder, TResult } from "@/types";
+import { revalidateTag } from "next/cache";
 
 export const placeOrderAction = async (
   orderData: any,
@@ -43,6 +44,8 @@ export const getAllOrdersOfCustomerAction = async (): Promise<
   try {
     const { message, success, data, pagination } =
       await orderServices.getAllOrdersOfCustomer();
+
+    revalidateTag("orders-customer", "max");
     return { success, message, data, pagination };
   } catch (error) {
     return {
@@ -65,6 +68,27 @@ export const getAllOrdersOfSellerAction = async (): Promise<
       success: false,
       message:
         getErrorMessage(error) || "An error occurred while fetching orders.",
+    };
+  }
+};
+
+export const updateOrderStatusAction = async (
+  orderId: string,
+  status: string,
+): Promise<TResult<IOrder>> => {
+  try {
+    const { message, success, data } = await orderServices.updateOrderStatus(
+      orderId,
+      status,
+    );
+    revalidateTag("orders-seller", "max");
+    return { success, message, data };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) ||
+        "An error occurred while updating order status.",
     };
   }
 };

@@ -9,7 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { IOrder } from "@/types";
+import { authClient } from "@/lib/auth-client";
+import { IOrder, User } from "@/types";
 import {
   Calendar,
   CreditCard,
@@ -18,6 +19,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import Link from "next/link";
+import UpdateOrderStatus from "./update-order-status";
 
 interface OrderCardProps {
   order: IOrder;
@@ -54,6 +56,10 @@ const formatPaymentMethod = (method: string) => {
 export function OrderCard({ order }: OrderCardProps) {
   const itemCount = order.items.length;
   const firstItem = order.items[0];
+
+  const { data: session } = authClient.useSession();
+  const user: User | null = session ? (session.user as unknown as User) : null;
+  const isSeller = user?.role === "SELLER";
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
@@ -122,11 +128,17 @@ export function OrderCard({ order }: OrderCardProps) {
           </div>
 
           {/* Action Button */}
-          <Link href={`/success/${order.id}`} className="block">
-            <Button variant="outline" className="w-full">
-              View Details
-            </Button>
-          </Link>
+          {isSeller ? (
+            <UpdateOrderStatus currentStatus={order.status} id={order.id} />
+          ) : (
+            <>
+              <Link href={`/success/${order.id}`} className="block">
+                <Button variant="outline" className="w-full">
+                  View Details
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </CardContent>
     </Card>
