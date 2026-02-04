@@ -84,4 +84,96 @@ export const medicineService = {
       };
     }
   },
+  getMedicineBySellerId: async (sellerId: string) => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/seller/${sellerId}`;
+      const response = await fetch(API_URL, {
+        cache: "no-store",
+      });
+      const result = await response.json();
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message,
+        };
+      }
+      return {
+        success: result.success,
+        message: result.message,
+        data: result.data as IMedicine[],
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error),
+      };
+    }
+  },
+
+  getMedicineById: async (medicineId: string) => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/${medicineId}`;
+      const response = await fetch(API_URL, {
+        cache: "no-store",
+      });
+      const result = await response.json();
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message,
+        };
+      }
+      return {
+        success: result.success,
+        message: result.message,
+        data: result.data as IMedicine,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error),
+      };
+    }
+  },
+
+  updateMedicineById: async (
+    medicineId: string,
+    medicineData: Partial<
+      Omit<IMedicine, "id" | "slug" | "createdAt" | "updatedAt" | "sellerId">
+    >,
+  ): Promise<TResult<IMedicine>> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/${medicineId}`;
+      const cookieStore = await cookies();
+
+      const response = await fetch(API_URL, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(medicineData),
+      });
+
+      const result = await response.json();
+
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message,
+        };
+      }
+
+      return {
+        success: result.success,
+        message: result.message,
+        data: result.data as IMedicine,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error),
+      };
+    }
+  },
 };

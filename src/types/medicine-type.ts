@@ -40,7 +40,7 @@ export enum Unit {
 }
 
 export enum MedicineStatus {
-  AVAILABLE,
-  OUT_OF_STOCK,
-  DISCONTINUED,
+  AVAILABLE = "AVAILABLE",
+  OUT_OF_STOCK = "OUT_OF_STOCK",
+  DISCONTINUED = "DISCONTINUED",
 }

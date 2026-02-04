@@ -1,6 +1,9 @@
 "use client";
 
-import { createMedicineAction } from "@/actions/medicine";
+import {
+  createMedicineAction,
+  updateMedicineByIdAction,
+} from "@/actions/medicine";
 import FormField from "@/components/common/form-field";
 import SubmitButton from "@/components/common/submit-button";
 import {
@@ -25,39 +28,68 @@ import {
 } from "@/components/ui/select";
 import { getErrorMessage } from "@/helpers/get-error";
 import { cn } from "@/lib/utils";
-import { DosageForm, MedicineStatus, Unit } from "@/types/medicine-type";
+import { ICategory } from "@/types/category-type";
+import {
+  DosageForm,
+  IMedicine,
+  MedicineStatus,
+  Unit,
+} from "@/types/medicine-type";
 import { addMedicineSchema } from "@/validations/add-medicine-schema";
 import { useForm } from "@tanstack/react-form";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const AddMedicineForm = ({
-  className,
-  ...props
-}: React.ComponentProps<"form">) => {
+  categories,
+  medicine,
+}: {
+  categories: ICategory[] | undefined;
+  medicine?: IMedicine;
+}) => {
+  const {
+    name,
+    brand,
+    description,
+    dosageForm,
+    unit,
+    strength,
+    stock,
+    price,
+    image,
+    status,
+    isOTCOnly: oldIsOTCOnly,
+    categoryId,
+  } = medicine || {};
+
   const [loading, setLoading] = useState<boolean>(false);
-  const [isOTCOnly, setIsOTCOnly] = useState<boolean>(false);
+  const [isOTCOnly, setIsOTCOnly] = useState<boolean>(oldIsOTCOnly || false);
+
+  const router = useRouter();
 
   const form = useForm({
     defaultValues: {
-      name: "",
-      brand: "",
-      description: "",
-      dosageForm: "",
-      unit: "",
-      strength: "",
-      stock: "0",
-      price: "0",
-      image: "images/not-implemented.png",
-      status: "AVAILABLE",
-      isOTCOnly: isOTCOnly,
-      categoryId: "",
+      name: name || "",
+      brand: brand || "",
+      description: description || "",
+      dosageForm: dosageForm || "",
+      unit: unit || "",
+      strength: strength || "",
+      stock: stock ? stock.toString() : "0",
+      price: price ? price.toString() : "0",
+      image: image || "images/not-implemented.png",
+      status: status || "AVAILABLE",
+      isOTCOnly: oldIsOTCOnly || false,
+      categoryId: categoryId || "",
     },
     validators: {
       onSubmit: addMedicineSchema,
     },
     onSubmit: async ({ value }) => {
-      const toastId = toast.loading("Adding medicine...");
+      const toastId = toast.loading(
+        medicine ? "Updating medicine..." : "Adding medicine...",
+      );
 
       if (isOTCOnly) {
         value.isOTCOnly = true;
@@ -83,31 +115,60 @@ const AddMedicineForm = ({
           isOTCOnly,
           categoryId,
         } = value;
-        const { success } = await createMedicineAction({
-          name,
-          brand,
-          description,
-          dosageForm: dosageForm as unknown as DosageForm,
-          unit: unit as unknown as Unit,
-          strength,
-          stock: parseInt(stock),
-          price: parseFloat(price),
-          image,
-          status: status as unknown as MedicineStatus,
-          isOTCOnly,
-          categoryId,
-        });
 
-        if (success === false) {
-          toast.error("Failed to add medicine.", {
+        if (medicine) {
+          const { success } = await updateMedicineByIdAction(medicine.id, {
+            name,
+            brand,
+            description,
+            dosageForm: dosageForm as unknown as DosageForm,
+            unit: unit as unknown as Unit,
+            strength,
+            stock: parseInt(stock),
+            price: parseFloat(price),
+            image,
+            status: status as unknown as MedicineStatus,
+            categoryId,
+          });
+
+          if (success === false) {
+            toast.error("Failed to update medicine.", {
+              id: toastId,
+            });
+            return;
+          }
+          toast.success("Medicine updated successfully!", {
             id: toastId,
           });
-          return;
+          router.push("/dashboard/?tab=medicines");
+        } else {
+          const { success } = await createMedicineAction({
+            name,
+            brand,
+            description,
+            dosageForm: dosageForm as unknown as DosageForm,
+            unit: unit as unknown as Unit,
+            strength,
+            stock: parseInt(stock),
+            price: parseFloat(price),
+            image,
+            status: status as unknown as MedicineStatus,
+            isOTCOnly,
+            categoryId,
+          });
+
+          if (success === false) {
+            toast.error("Failed to add medicine.", {
+              id: toastId,
+            });
+            return;
+          }
+          toast.success("Medicine added successfully!", {
+            id: toastId,
+          });
+          form.reset();
+          setIsOTCOnly(false);
         }
-        toast.success("Medicine added successfully!", {
-          id: toastId,
-        });
-        form.reset();
       } catch (error) {
         toast.error(getErrorMessage(error) || "Failed to add medicine.", {
           id: toastId,
@@ -121,9 +182,12 @@ const AddMedicineForm = ({
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Add New Medicine</CardTitle>
+        <CardTitle>
+          {medicine ? "Update Medicine" : "Add New Medicine"}
+        </CardTitle>
         <CardDescription>
-          Fill in the details to add a new medicine to your inventory
+          Fill out the form below to {medicine ? "update" : "add"} a new
+          medicine to your inventory.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -133,8 +197,7 @@ const AddMedicineForm = ({
             e.preventDefault();
             form.handleSubmit();
           }}
-          className={cn("flex flex-col gap-6", className)}
-          {...props}
+          className={cn("flex flex-col gap-6")}
         >
           <FieldGroup>
             {/* Basic Information */}
@@ -174,7 +237,7 @@ const AddMedicineForm = ({
                   >
                     <FieldLabel htmlFor="dosageForm">Dosage Form *</FieldLabel>
                     <Select
-                      value={field.state.value}
+                      value={String(field.state.value) || ""}
                       onValueChange={field.handleChange}
                     >
                       <SelectTrigger id="dosageForm">
@@ -218,7 +281,7 @@ const AddMedicineForm = ({
                   >
                     <FieldLabel htmlFor="unit">Unit *</FieldLabel>
                     <Select
-                      value={field.state.value}
+                      value={String(field.state.value) || ""}
                       onValueChange={field.handleChange}
                     >
                       <SelectTrigger id="unit">
@@ -278,18 +341,19 @@ const AddMedicineForm = ({
                   >
                     <FieldLabel htmlFor="categoryId">Category *</FieldLabel>
                     <Select
-                      value={field.state.value}
+                      value={String(field.state.value) || ""}
                       onValueChange={field.handleChange}
                     >
                       <SelectTrigger id="categoryId">
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="pain-relief">Pain Relief</SelectItem>
-                        <SelectItem value="cold-flu">Cold & Flu</SelectItem>
-                        <SelectItem value="digestion">Digestion</SelectItem>
-                        <SelectItem value="vitamins">Vitamins</SelectItem>
-                        <SelectItem value="antibiotics">Antibiotics</SelectItem>
+                        {categories &&
+                          categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     {field.state.meta.isTouched &&
@@ -310,7 +374,7 @@ const AddMedicineForm = ({
                   >
                     <FieldLabel htmlFor="status">Status</FieldLabel>
                     <Select
-                      value={field.state.value}
+                      value={String(field.state.value) || ""}
                       onValueChange={field.handleChange}
                     >
                       <SelectTrigger id="status">
@@ -353,7 +417,7 @@ const AddMedicineForm = ({
         <SubmitButton
           loading={loading}
           formName="add-medicine-form"
-          label="Add Medicine"
+          label={medicine ? "Update Medicine" : "Add Medicine"}
         />
       </CardContent>
     </Card>

@@ -1,11 +1,19 @@
 import { getCurrentUserCartAction } from "@/actions/cart";
-import { IMedicine } from "@/types/medicine-type";
+import { ROLE } from "@/types";
+import { IMedicine, MedicineStatus } from "@/types/medicine-type";
+import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import AddToCart from "./add-to-cart";
 
-const MedicineCard = async ({ medicine }: { medicine: IMedicine }) => {
+const MedicineCard = async ({
+  medicine,
+  role,
+}: {
+  medicine: IMedicine;
+  role?: string;
+}) => {
   const { data } = await getCurrentUserCartAction();
 
   const isInCart = data?.items.some((item) => item.medicineId === medicine.id);
@@ -21,9 +29,16 @@ const MedicineCard = async ({ medicine }: { medicine: IMedicine }) => {
     unit,
     price,
     isOTCOnly,
+    status,
   } = medicine;
 
-  const isInStock = stock > 0;
+  let isInStock = stock > 0;
+  if (
+    status === MedicineStatus.OUT_OF_STOCK ||
+    status === MedicineStatus.DISCONTINUED
+  ) {
+    isInStock = false;
+  }
 
   const stockStyle = isInStock
     ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
@@ -115,7 +130,15 @@ const MedicineCard = async ({ medicine }: { medicine: IMedicine }) => {
 
           {/* Add to Cart Button */}
           {/* Primary Medical Color: Teal-600 */}
-          {isInCart ? (
+          {role === ROLE.SELLER ? (
+            <Link
+              href={`/dashboard/?tab=update-medicine&medicineId=${medicineId}`}
+              className="flex gap-1 items-center"
+            >
+              <Button variant="link">Update Medicine</Button>
+              <Edit className="h-5 w-5 text-slate-600 dark:text-slate-300" />
+            </Link>
+          ) : isInCart ? (
             <Link href="/cart">
               <Button variant="link">Go Cart</Button>
             </Link>
