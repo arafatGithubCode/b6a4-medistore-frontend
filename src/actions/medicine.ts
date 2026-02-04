@@ -93,3 +93,19 @@ export const updateMedicineByIdAction = async (
     };
   }
 };
+
+export const deleteMedicineByIdAction = async (
+  medicineId: string,
+): Promise<TResult<null>> => {
+  try {
+    const { message, success, data } =
+      await medicineService.deleteMedicineById(medicineId);
+    revalidateTag("medicines", "max");
+    return { message, success, data };
+  } catch (error) {
+    return {
+      success: false,
+      message: getErrorMessage(error),
+    };
+  }
+};

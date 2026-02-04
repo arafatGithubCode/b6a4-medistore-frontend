@@ -4,6 +4,7 @@ import { IMedicine, MedicineStatus } from "@/types/medicine-type";
 import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import DeleteMedicine from "../module/medicine/delete-medicine";
 import { Button } from "../ui/button";
 import AddToCart from "./add-to-cart";
 
@@ -131,13 +132,17 @@ const MedicineCard = async ({
           {/* Add to Cart Button */}
           {/* Primary Medical Color: Teal-600 */}
           {role === ROLE.SELLER ? (
-            <Link
-              href={`/dashboard/?tab=update-medicine&medicineId=${medicineId}`}
-              className="flex gap-1 items-center"
-            >
-              <Button variant="link">Update Medicine</Button>
-              <Edit className="h-5 w-5 text-slate-600 dark:text-slate-300" />
-            </Link>
+            <div className="flex gap-2 items-center">
+              <Link
+                className="cursor-none"
+                href={`/dashboard/?tab=update-medicine&medicineId=${medicineId}`}
+              >
+                <Button variant="outline" size="icon">
+                  <Edit className="h-4 w-4 text-slate-600 dark:text-slate-300 hover:text-blue-500" />
+                </Button>
+              </Link>
+              <DeleteMedicine medicineId={medicineId} />
+            </div>
           ) : isInCart ? (
             <Link href="/cart">
               <Button variant="link">Go Cart</Button>

@@ -176,4 +176,35 @@ export const medicineService = {
       };
     }
   },
+
+  deleteMedicineById: async (medicineId: string): Promise<TResult<null>> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/${medicineId}`;
+      const cookieStore = await cookies();
+      const response = await fetch(API_URL, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+      });
+      const result = await response.json();
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message,
+        };
+      }
+      return {
+        success: result.success,
+        message: result.message,
+        data: null,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error),
+      };
+    }
+  },
 };
