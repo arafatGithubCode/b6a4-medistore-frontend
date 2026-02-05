@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
-import { IOrder, User } from "@/types";
+import { IOrder, ROLE, User } from "@/types";
 import {
   Calendar,
   CreditCard,
@@ -18,7 +17,7 @@ import {
   Package,
   ShoppingBag,
 } from "lucide-react";
-import Link from "next/link";
+import CancelOrder from "./cancel-order";
 import UpdateOrderStatus from "./update-order-status";
 
 interface OrderCardProps {
@@ -59,7 +58,12 @@ export function OrderCard({ order }: OrderCardProps) {
 
   const { data: session } = authClient.useSession();
   const user: User | null = session ? (session.user as unknown as User) : null;
-  const isSeller = user?.role === "SELLER";
+  const isSeller = user?.role === ROLE.SELLER;
+  const isAdmin = user?.role === ROLE.ADMIN;
+
+  const hasActionPermissions = isSeller || isAdmin;
+
+  const isPlaced = order.status === "PLACED";
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
@@ -128,15 +132,25 @@ export function OrderCard({ order }: OrderCardProps) {
           </div>
 
           {/* Action Button */}
-          {isSeller ? (
+          {hasActionPermissions ? (
             <UpdateOrderStatus currentStatus={order.status} id={order.id} />
           ) : (
             <>
-              <Link href={`/success/${order.id}`} className="block">
-                <Button variant="outline" className="w-full">
-                  View Details
-                </Button>
-              </Link>
+              {isPlaced ? (
+                <div className="flex items-center justify-between gap-3">
+                  <Badge variant="outline">Awaiting processing by seller</Badge>
+                  <CancelOrder orderId={order.id} />
+                </div>
+              ) : (
+                <div>
+                  <Badge variant="outline" className="w-full p-2">
+                    {`Order is currently ${order.status.toLowerCase()}. `}
+                  </Badge>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    For any inquiries, please contact support.
+                  </p>
+                </div>
+              )}
             </>
           )}
         </div>

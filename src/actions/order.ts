@@ -92,3 +92,21 @@ export const updateOrderStatusAction = async (
     };
   }
 };
+
+export const cancelOrderAction = async (
+  orderId: string,
+): Promise<TResult<IOrder>> => {
+  try {
+    const { message, success, data } = await orderServices.cancelOrder(orderId);
+    revalidateTag("orders-seller", "max");
+    revalidateTag("orders-customer", "max");
+    return { success, message, data };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        getErrorMessage(error) ||
+        "An error occurred while cancelling the order.",
+    };
+  }
+};
