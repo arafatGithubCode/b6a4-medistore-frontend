@@ -70,19 +70,21 @@ const UserCard = ({ user }: { user: User }) => {
       <div className="p-6 space-y-4">
         {/* Email */}
         <div className="flex items-start gap-3">
-          <Mail className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+          <Mail className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-xs text-muted-foreground font-medium mb-1">
               Email
             </p>
-            <p className="text-sm text-foreground break-words">{user.email}</p>
+            <p className="text-sm text-foreground wrap-break-word">
+              {user.email}
+            </p>
           </div>
         </div>
 
         {/* Phone */}
         {user.phone && (
           <div className="flex items-start gap-3">
-            <Phone className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+            <Phone className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground font-medium mb-1">
                 Phone
@@ -94,12 +96,12 @@ const UserCard = ({ user }: { user: User }) => {
 
         {/* Address */}
         <div className="flex items-start gap-3">
-          <MapPin className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+          <MapPin className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-xs text-muted-foreground font-medium mb-1">
               Address
             </p>
-            <p className="text-sm text-foreground break-words">
+            <p className="text-sm text-foreground break-words-wrap">
               {getFullAddress()}
             </p>
           </div>
@@ -108,7 +110,7 @@ const UserCard = ({ user }: { user: User }) => {
         {/* Dates */}
         <div className="pt-4 border-t border-border space-y-3">
           <div className="flex items-center gap-3">
-            <Calendar className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+            <Calendar className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
             <div className="flex-1">
               <p className="text-xs text-muted-foreground font-medium">
                 Joined
@@ -119,12 +121,12 @@ const UserCard = ({ user }: { user: User }) => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Calendar className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+            <Calendar className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
             <div className="flex-1">
               <p className="text-xs text-muted-foreground font-medium">
                 Last Updated
               </p>
-              <p className="text-sm text-foreground">
+              <p className="text-sm text-foreground break-words-wrap">
                 {formatDate(user.updatedAt)}
               </p>
             </div>
