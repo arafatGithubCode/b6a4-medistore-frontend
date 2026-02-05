@@ -5,9 +5,8 @@ import {
   decrementCartItemQuantityAction,
   deleteCartItemAction,
 } from "@/actions/cart";
-import { Button } from "@/components/ui/button";
 import { ICart, ICartItem } from "@/types";
-import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import CartItem from "./cart-item";
 import CartSummary from "./cart-summary";
@@ -115,24 +114,17 @@ const CartWrapper = ({ cart }: { cart: ICart | undefined }) => {
         </div>
       ) : (
         <div className="text-center py-16">
-          <div className="mb-4">
-            <Image
-              src="/medicine.png"
-              alt="Empty Cart"
-              width={120}
-              height={120}
-              className="mx-auto opacity-50"
-            />
-          </div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
             Your Cart is Empty
           </h2>
           <p className="text-slate-600 dark:text-slate-400 mb-6">
             Add some medicines to get started!
           </p>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            Continue Shopping
-          </Button>
+          <Link href="/shop" className="inline-block">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+              Continue Shopping
+            </button>
+          </Link>
         </div>
       )}
     </div>

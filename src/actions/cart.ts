@@ -13,6 +13,7 @@ export const addToCartAction = async (item: {
   try {
     const { success, message, data } = await cartService.addToCart(item);
     revalidateTag("cart", "max");
+    revalidateTag("medicines", "max");
     return { success, message, data };
   } catch (error) {
     return {

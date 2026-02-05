@@ -47,14 +47,14 @@ const NavbarCart = () => {
           {cart?.items?.length || 0}
         </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40" align="start">
+      <DropdownMenuContent align="start">
         <DropdownMenuGroup>
           <DropdownMenuLabel>Added Medicines</DropdownMenuLabel>
           {cart?.items?.length ? (
             cart.items.map((item) => (
               <DropdownMenuItem
                 key={item.medicineId}
-                className="flex justify-between"
+                className="flex gap-5 justify-between"
               >
                 <div className="w-8 h-8 rounded relative">
                   <Image

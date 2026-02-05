@@ -57,11 +57,18 @@ const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
     ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
     : "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800";
 
+  const fetchCart = async () => {
+    const { data } = await getCurrentUserCartAction();
+    setCart(data);
+  };
+
   useEffect(() => {
-    (async () => {
-      const { data } = await getCurrentUserCartAction();
-      setCart(data);
-    })();
+    fetchCart();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("cartUpdated", fetchCart);
+    return () => window.removeEventListener("cartUpdated", fetchCart);
   }, []);
 
   return (
