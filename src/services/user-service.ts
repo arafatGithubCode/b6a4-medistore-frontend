@@ -72,4 +72,67 @@ export const userServices = {
       };
     }
   },
+
+  getAllUsers: async (): Promise<TResult<User[]>> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/users`;
+      const cookieStore = await cookies();
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        next: { tags: ["users"] },
+      });
+      const result = await response.json();
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to fetch users",
+        };
+      }
+      return {
+        success: true,
+        message: "Users fetched successfully",
+        data: result.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error) || "Failed to fetch users",
+      };
+    }
+  },
+
+  deleteUserById: async (userId: string): Promise<TResult<null>> => {
+    try {
+      const API_URL = `${env.BACKEND_URL}/api/v1/users/${userId}`;
+      const cookieStore = await cookies();
+      const response = await fetch(API_URL, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+      });
+      const result = await response.json();
+      if (result.success === false) {
+        return {
+          success: false,
+          message: result.message || "Failed to delete user",
+        };
+      }
+      return {
+        success: true,
+        message: "User deleted successfully",
+        data: null,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getErrorMessage(error) || "Failed to delete user",
+      };
+    }
+  },
 };

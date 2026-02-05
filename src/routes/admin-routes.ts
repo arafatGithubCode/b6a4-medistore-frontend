@@ -10,4 +10,11 @@ export const adminRoutes: TRoute[] = [
       { title: "Get a category by slug", tab: "get-category-by-slug" },
     ],
   },
+  {
+    title: "User Management",
+    items: [
+      { title: "Get All users", tab: "get-users" },
+      { title: "Get a user by ID", tab: "get-user-by-id" },
+    ],
+  },
 ];
