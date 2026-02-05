@@ -1,23 +1,35 @@
+"use client";
+
 import { getCurrentUserCartAction } from "@/actions/cart";
-import { ROLE } from "@/types";
+import { authClient } from "@/lib/auth-client";
+import { ICart, ROLE } from "@/types";
 import { IMedicine, MedicineStatus } from "@/types/medicine-type";
 import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import DeleteMedicine from "../module/medicine/delete-medicine";
 import { Button } from "../ui/button";
 import AddToCart from "./add-to-cart";
 
-const MedicineCard = async ({
-  medicine,
-  role,
-}: {
-  medicine: IMedicine;
-  role?: string;
-}) => {
-  const { data } = await getCurrentUserCartAction();
+const MedicineCard = ({ medicine }: { medicine: IMedicine }) => {
+  // prevent invalid medicine data
+  if (Array.isArray(medicine)) {
+    return null;
+  }
+  const [cart, setCart] = useState<ICart | undefined>(undefined);
 
-  const isInCart = data?.items.some((item) => item.medicineId === medicine.id);
+  const isInCart = cart?.items.some((item) => item.medicineId === medicine.id);
+
+  const { data: session } = authClient.useSession();
+  const role = (
+    session?.user as unknown as { role?: (typeof ROLE)[keyof typeof ROLE] }
+  )?.role;
+
+  const isSeller = role === ROLE.SELLER;
+  const isAdmin = role === ROLE.ADMIN;
+
+  const hasActionPermissions = isSeller || isAdmin;
 
   const {
     id: medicineId,
@@ -45,6 +57,13 @@ const MedicineCard = async ({
     ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800"
     : "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800";
 
+  useEffect(() => {
+    (async () => {
+      const { data } = await getCurrentUserCartAction();
+      setCart(data);
+    })();
+  }, []);
+
   return (
     <div
       className="w-full max-w-sm flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 
@@ -56,7 +75,7 @@ const MedicineCard = async ({
       <div className="relative h-48 flex items-center justify-center bg-slate-50 dark:bg-slate-700/50">
         <Image
           src="/medicine.png"
-          alt={name}
+          alt={name || "Medicine Image"}
           fill
           className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
         />
@@ -131,7 +150,7 @@ const MedicineCard = async ({
 
           {/* Add to Cart Button */}
           {/* Primary Medical Color: Teal-600 */}
-          {role === ROLE.SELLER ? (
+          {hasActionPermissions ? (
             <div className="flex gap-2 items-center">
               <Link
                 className="cursor-none"

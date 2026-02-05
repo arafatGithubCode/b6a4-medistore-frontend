@@ -15,6 +15,7 @@ export const createMedicineAction = async (
   try {
     const { message, success, data } =
       await medicineService.createMedicine(medicineData);
+    revalidateTag("medicines", "max");
     return { message, success, data };
   } catch (error) {
     return {

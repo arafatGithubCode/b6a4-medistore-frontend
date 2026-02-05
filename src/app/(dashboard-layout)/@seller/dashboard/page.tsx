@@ -41,11 +41,7 @@ const Dashboard = async ({
         {success && data && data.length > 0 ? (
           <div className="flex flex-wrap gap-4">
             {data.map((medicine) => (
-              <MedicineCard
-                key={medicine.id}
-                medicine={medicine}
-                role={user?.role}
-              />
+              <MedicineCard key={medicine.id} medicine={medicine} />
             ))}
           </div>
         ) : (

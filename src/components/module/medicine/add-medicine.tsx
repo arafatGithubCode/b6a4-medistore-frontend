@@ -143,6 +143,7 @@ const AddMedicineForm = ({
           });
 
           params.delete("medicineId");
+          params.set("tab", "medicines");
           router.push("/dashboard/?tab=medicines");
         } else {
           const { success } = await createMedicineAction({

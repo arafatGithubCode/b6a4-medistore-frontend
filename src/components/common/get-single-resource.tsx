@@ -8,15 +8,18 @@ import CategoryCard from "../module/category/category-card";
 import UserCard from "../module/user/user-card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import MedicineCard from "./medicine-card";
 
 const GetSingleResource = ({
   path,
   resourceType,
   label,
+  tab,
 }: {
   path: string;
   resourceType: string;
   label?: string;
+  tab?: string;
 }) => {
   const [value, setValue] = useState("");
   const [data, setData] = useState<any>(null);
@@ -51,6 +54,7 @@ const GetSingleResource = ({
       setLoading(false);
     }
   };
+
   return (
     <div className="p-4 mt-10">
       <h1>
@@ -76,10 +80,30 @@ const GetSingleResource = ({
 
       <div className="my-10">
         <h2 className="mt-6 mb-4">{resourceType} Details:</h2>
+        {/* category card */}
         {data && resourceType === "category" && (
           <CategoryCard category={data} />
         )}
+        {/* user card */}
         {data && resourceType === "user" && <UserCard user={data} />}
+        {/* medicine card */}
+        {data && tab === "get-medicine-by-id" && (
+          <MedicineCard medicine={data} />
+        )}
+        {data && tab === "get-medicines-by-seller-id" && (
+          <div>
+            <h2 className="mt-6 mb-4">Medicines by Seller:</h2>
+            {data.length > 0 ? (
+              <div className="flex flex-wrap gap-3 p-6 container mx-auto px-4">
+                {data.map((medicine: any) => (
+                  <MedicineCard key={medicine.id} medicine={medicine} />
+                ))}
+              </div>
+            ) : (
+              <div>No medicines found for this seller.</div>
+            )}
+          </div>
+        )}
         {!data && <div>No {resourceType} data to display.</div>}
       </div>
     </div>

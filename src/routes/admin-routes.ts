@@ -17,4 +17,16 @@ export const adminRoutes: TRoute[] = [
       { title: "Get a user by ID", tab: "get-user-by-id" },
     ],
   },
+  {
+    title: "Medicine Management",
+    items: [
+      { title: "Add a medicine", tab: "add-medicine" },
+      { title: "Get All medicines", tab: "medicines" },
+      {
+        title: "Get medicines by Seller ID",
+        tab: "get-medicines-by-seller-id",
+      },
+      { title: "Get a medicine by ID", tab: "get-medicine-by-id" },
+    ],
+  },
 ];

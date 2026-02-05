@@ -7,8 +7,6 @@ export const commonServices = {
     try {
       const API_URL = `${env.BACKEND_URL}/api/v1${path}`;
 
-      console.log("Fetching single resource from:", API_URL);
-
       const cookieStore = await cookies();
 
       const response = await fetch(API_URL, {
@@ -16,6 +14,7 @@ export const commonServices = {
         headers: {
           Cookie: cookieStore.toString(),
         },
+        cache: "no-store",
       });
 
       const result = await response.json();
