@@ -1,4 +1,5 @@
 export type { ICart, ICartItem } from "./cart-type";
+export type { ICategory } from "./category-type";
 export { ROLE } from "./enum";
 export type {
   IOrder,

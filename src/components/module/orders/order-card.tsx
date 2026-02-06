@@ -1,5 +1,6 @@
 "use client";
 
+import { getReviewsByMedicineIdAction } from "@/actions/review";
 import Popup from "@/components/common/popup";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getErrorMessage } from "@/helpers/get-error";
 import { authClient } from "@/lib/auth-client";
 import { IOrder, ROLE, User } from "@/types";
+import { IReview } from "@/types/review-type";
 import {
   Calendar,
   CreditCard,
@@ -19,7 +22,7 @@ import {
   Package,
   ShoppingBag,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LeaveReview from "../review/leave-review";
 import CancelOrder from "./cancel-order";
 import UpdateOrderStatus from "./update-order-status";
@@ -58,6 +61,7 @@ const formatPaymentMethod = (method: string) => {
 
 export function OrderCard({ order }: OrderCardProps) {
   const [open, setOpen] = useState(false);
+  const [reviews, setReviews] = useState<IReview[]>([]);
 
   const itemCount = order.items.length;
   const firstItem = order.items[0];
@@ -70,6 +74,26 @@ export function OrderCard({ order }: OrderCardProps) {
   const hasActionPermissions = isSeller || isAdmin;
 
   const isPlaced = order.status === "PLACED";
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { success, data, message } = await getReviewsByMedicineIdAction(
+          firstItem.medicine?.id || "",
+        );
+        if (success) {
+          setReviews(data || []);
+        } else {
+          console.error("Failed to fetch reviews:", message);
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", getErrorMessage(error));
+      }
+    })();
+  }, []);
+
+  const isReviewed = reviews.some((review) => review.userId === user?.id);
+  const placedReview = reviews.find((review) => review.userId === user?.id);
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
@@ -152,15 +176,29 @@ export function OrderCard({ order }: OrderCardProps) {
                   <Badge variant="outline" className="w-full p-2">
                     {`Order is currently ${order.status.toLowerCase()}. `}
                   </Badge>
-                  {order.status === "DELIVERED" && (
-                    <Button onClick={() => setOpen(true)}>
-                      Leave a Review
-                    </Button>
-                  )}
+                  {order.status === "DELIVERED" &&
+                    (isReviewed ? (
+                      <div className="flex items-center justify-between gap-2">
+                        <Badge
+                          variant="success"
+                          className="w-full p-2 text-center"
+                        >
+                          You have already reviewed this product.
+                        </Badge>
+                        <Button onClick={() => setOpen(true)}>
+                          Update Review
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button onClick={() => setOpen(true)}>
+                        Leave a Review
+                      </Button>
+                    ))}
                   {open && (
                     <Popup onClose={() => setOpen(false)}>
                       <LeaveReview
-                        medicineId={order.items[0].medicine?.id}
+                        medicineId={firstItem?.medicine?.id || ""}
+                        existingReview={placedReview}
                         onClose={() => setOpen(false)}
                       />
                     </Popup>

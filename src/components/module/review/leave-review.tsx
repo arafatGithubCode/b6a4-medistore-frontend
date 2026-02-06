@@ -1,6 +1,6 @@
 "use client";
 
-import { leaveReviewAction } from "@/actions/review";
+import { leaveReviewAction, updateReviewAction } from "@/actions/review";
 import SubmitButton from "@/components/common/submit-button";
 import {
   Card,
@@ -13,6 +13,7 @@ import {
 import { FieldError } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { getErrorMessage } from "@/helpers/get-error";
+import { IReview } from "@/types/review-type";
 import { reviewSchema } from "@/validations/review-schema";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
@@ -20,17 +21,19 @@ import { toast } from "sonner";
 
 const LeaveReview = ({
   medicineId,
+  existingReview,
   onClose,
 }: {
   medicineId: string;
+  existingReview?: IReview;
   onClose: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
 
   const form = useForm({
     defaultValues: {
-      rating: 0,
-      content: "",
+      rating: existingReview ? existingReview.rating : 0,
+      content: existingReview ? existingReview.content : "",
     },
 
     validators: {
@@ -41,18 +44,30 @@ const LeaveReview = ({
       const toastId = toast.loading("Submitting your review...");
 
       try {
-        const { success, message } = await leaveReviewAction(medicineId, {
-          rating: value.rating,
-          content: value.content,
-        });
+        if (existingReview) {
+          const { success, message } = await updateReviewAction(
+            existingReview.id,
+            value,
+          );
 
-        if (success === false) {
-          toast.error(message || "Failed to submit review", { id: toastId });
+          if (success === false) {
+            toast.error(message, { id: toastId });
+          } else {
+            toast.success("Review updated successfully", { id: toastId });
+            onClose();
+          }
         } else {
-          toast.success(message || "Review submitted successfully!", {
-            id: toastId,
-          });
-          onClose();
+          const { success, message } = await leaveReviewAction(
+            medicineId,
+            value,
+          );
+
+          if (success === false) {
+            toast.error(message, { id: toastId });
+          } else {
+            toast.success("Review submitted successfully", { id: toastId });
+            onClose();
+          }
         }
       } catch (error) {
         toast.error(getErrorMessage(error), { id: toastId });
@@ -65,7 +80,9 @@ const LeaveReview = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Leave a Review</CardTitle>
+        <CardTitle>
+          {existingReview ? "Update Review" : "Leave a Review"}
+        </CardTitle>
         <CardDescription>
           Share your feedback about the product.
         </CardDescription>
@@ -118,7 +135,7 @@ const LeaveReview = ({
       <CardFooter>
         <SubmitButton
           formName="review-form"
-          label="Submit Review"
+          label={existingReview ? "Update Review" : "Submit Review"}
           loading={loading}
         />
       </CardFooter>
