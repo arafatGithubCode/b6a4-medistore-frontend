@@ -18,6 +18,12 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // navigate to order page if user is customer and path is dashboard
+  if (userRole === ROLE.CUSTOMER && url.pathname.startsWith("/dashboard")) {
+    url.pathname = "/order";
+    return NextResponse.redirect(url);
+  }
+
   if (!Object.values(ROLE).includes(userRole)) {
     url.pathname = "/signin";
     return NextResponse.redirect(url);
@@ -27,5 +33,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/dashboard/:path*",
+  matcher: ["/dashboard/:path*", "/order/:path*", "/profile/:path*"],
 };

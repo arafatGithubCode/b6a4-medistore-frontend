@@ -107,7 +107,7 @@ const Navbar = ({
               <span className="animate-pulse">Loading...</span>
             ) : data?.user ? (
               <div className="flex items-center gap-4">
-                <NavbarUser user={data.user} />
+                <NavbarUser user={userWithRole} />
                 {userWithRole?.role === ROLE.CUSTOMER && <NavbarCart />}
               </div>
             ) : (

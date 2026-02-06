@@ -10,11 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
+import { ROLE, User } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const NavbarUser = ({ user }: { user: any }) => {
+const NavbarUser = ({ user }: { user: User | undefined }) => {
   const router = useRouter();
   return (
     <DropdownMenu>
@@ -28,9 +29,20 @@ const NavbarUser = ({ user }: { user: any }) => {
       <DropdownMenuContent className="w-40" align="start">
         <DropdownMenuGroup>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuItem>
-            <Link href="/dashboard">Dashboard</Link>
-          </DropdownMenuItem>
+          {user && user.role === ROLE.CUSTOMER ? (
+            <>
+              <DropdownMenuItem>
+                <Link href="/profile">Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/order">Orders</Link>
+              </DropdownMenuItem>
+            </>
+          ) : (
+            <DropdownMenuItem>
+              <Link href="/dashboard">Dashboard</Link>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

@@ -12,11 +12,9 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 const DashboardLayout = async ({
-  customer,
   seller,
   admin,
 }: {
-  customer: ReactNode;
   seller: ReactNode;
   admin: ReactNode;
 }) => {
@@ -37,7 +35,6 @@ const DashboardLayout = async ({
             <ModeToggle />
           </div>
         </header>
-        {userRole === ROLE.CUSTOMER && customer}
         {userRole === ROLE.SELLER && seller}
         {userRole === ROLE.ADMIN && admin}
       </SidebarInset>

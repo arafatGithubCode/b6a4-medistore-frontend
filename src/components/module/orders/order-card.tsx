@@ -1,6 +1,8 @@
 "use client";
 
+import Popup from "@/components/common/popup";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,6 +19,8 @@ import {
   Package,
   ShoppingBag,
 } from "lucide-react";
+import { useState } from "react";
+import LeaveReview from "../review/leave-review";
 import CancelOrder from "./cancel-order";
 import UpdateOrderStatus from "./update-order-status";
 
@@ -53,6 +57,8 @@ const formatPaymentMethod = (method: string) => {
 };
 
 export function OrderCard({ order }: OrderCardProps) {
+  const [open, setOpen] = useState(false);
+
   const itemCount = order.items.length;
   const firstItem = order.items[0];
 
@@ -142,13 +148,23 @@ export function OrderCard({ order }: OrderCardProps) {
                   <CancelOrder orderId={order.id} />
                 </div>
               ) : (
-                <div>
+                <div className="flex flex-col items-start gap-3">
                   <Badge variant="outline" className="w-full p-2">
                     {`Order is currently ${order.status.toLowerCase()}. `}
                   </Badge>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    For any inquiries, please contact support.
-                  </p>
+                  {order.status === "DELIVERED" && (
+                    <Button onClick={() => setOpen(true)}>
+                      Leave a Review
+                    </Button>
+                  )}
+                  {open && (
+                    <Popup onClose={() => setOpen(false)}>
+                      <LeaveReview
+                        medicineId={order.items[0].medicine?.id}
+                        onClose={() => setOpen(false)}
+                      />
+                    </Popup>
+                  )}
                 </div>
               )}
             </>
