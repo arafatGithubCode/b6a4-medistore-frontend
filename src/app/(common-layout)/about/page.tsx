@@ -39,7 +39,7 @@ const AboutPage = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex gap-4">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Heart className="w-8 h-8 text-red-500" />
               </div>
               <div>
@@ -54,7 +54,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Truck className="w-8 h-8 text-blue-500" />
               </div>
               <div>
@@ -69,7 +69,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Shield className="w-8 h-8 text-green-500" />
               </div>
               <div>
@@ -84,7 +84,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Pill className="w-8 h-8 text-purple-500" />
               </div>
               <div>
