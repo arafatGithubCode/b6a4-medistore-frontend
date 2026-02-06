@@ -6,7 +6,9 @@ import MedicineCard from "@/components/common/medicine-card";
 import AddCategory from "@/components/module/category/add-category";
 import CategoryCard from "@/components/module/category/category-card";
 import AddMedicineForm from "@/components/module/medicine/add-medicine";
+import { ProfileDisplay } from "@/components/module/profile/profile-display";
 import UserCard from "@/components/module/user/user-card";
+import { userServices } from "@/services/user-service";
 
 const Dashboard = async ({
   searchParams,
@@ -153,6 +155,27 @@ const Dashboard = async ({
       />
     );
   }
+
+  if (tab === "task") {
+    return (
+      <div className="container mx-auto py-8">
+        <p className="text-center text-gray-500">
+          The backend is completed but frontend is under development.
+        </p>
+        <p>Due to time shortest</p>
+      </div>
+    );
+  }
+
+  // profile tab
+
+  const { data: session } = await userServices.getUserSession();
+  const user = session?.user;
+  return (
+    <div className="container mx-auto py-8 px-4">
+      {user ? <ProfileDisplay user={user} /> : null}
+    </div>
+  );
 };
 
 export default Dashboard;

@@ -82,9 +82,9 @@ const SuccessPage = async ({
             <Link href="/shop" className="w-full sm:w-auto">
               <Button className="w-full sm:w-auto">Continue Shopping</Button>
             </Link>
-            <Link href="/dashboard" className="w-full sm:w-auto">
+            <Link href="/order" className="w-full sm:w-auto">
               <Button variant="outline" className="w-full sm:w-auto">
-                Go to Dashboard
+                Track My Orders
               </Button>
             </Link>
           </div>
