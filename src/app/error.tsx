@@ -18,7 +18,7 @@ export default function ErrorHomepage({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-orange-100 dark:from-slate-900 dark:to-slate-800 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-red-50 to-orange-100 dark:from-slate-900 dark:to-slate-800 p-4">
       <div className="max-w-md w-full space-y-8 text-center">
         <div className="flex justify-center">
           <div className="relative">
