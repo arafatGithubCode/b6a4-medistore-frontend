@@ -1,5 +1,5 @@
-import { env } from "@/env";
 import { getErrorMessage } from "@/helpers/get-error";
+import { API_ENDPOINTS } from "@/services/api-config";
 import { TResult } from "@/types/return-type";
 import { Session, User } from "@/types/session-type";
 import { cookies } from "next/headers";
@@ -8,7 +8,7 @@ export const userServices = {
   getUserSession: async (): Promise<
     TResult<{ session: Session; user: User }>
   > => {
-    const API_URL = `${env.BACKEND_URL}/api/auth/get-session`;
+    const API_URL = API_ENDPOINTS.USER_SESSION;
     const cookieStore = await cookies();
 
     const response = await fetch(API_URL, {
@@ -40,7 +40,7 @@ export const userServices = {
     updateData: Partial<User>,
   ): Promise<TResult<User>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/users/${userId}`;
+      const API_URL = API_ENDPOINTS.USER_BY_ID(userId);
       const cookieStore = await cookies();
 
       const response = await fetch(API_URL, {
@@ -75,7 +75,7 @@ export const userServices = {
 
   getAllUsers: async (): Promise<TResult<User[]>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/users`;
+      const API_URL = API_ENDPOINTS.USERS;
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "GET",
@@ -107,7 +107,7 @@ export const userServices = {
 
   deleteUserById: async (userId: string): Promise<TResult<null>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/users/${userId}`;
+      const API_URL = API_ENDPOINTS.USER_BY_ID(userId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "DELETE",

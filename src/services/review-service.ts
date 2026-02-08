@@ -1,5 +1,5 @@
-import { env } from "@/env";
 import { getErrorMessage } from "@/helpers/get-error";
+import { API_ENDPOINTS } from "@/services/api-config";
 import { TResult } from "@/types";
 import { IReview } from "@/types/review-type";
 import { cookies } from "next/headers";
@@ -10,7 +10,7 @@ export const reviewService = {
     reviewData: { rating: number; content: string },
   ): Promise<TResult<null>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/reviews/${orderId}`;
+      const API_URL = API_ENDPOINTS.REVIEWS_BY_ORDER(orderId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "POST",
@@ -47,7 +47,7 @@ export const reviewService = {
     medicineId: string,
   ): Promise<TResult<any[]>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/reviews/medicine/${medicineId}`;
+      const API_URL = API_ENDPOINTS.REVIEWS_BY_MEDICINE(medicineId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "GET",
@@ -82,7 +82,7 @@ export const reviewService = {
     reviewData: { rating: number; content: string },
   ): Promise<TResult<IReview>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/reviews/${reviewId}`;
+      const API_URL = API_ENDPOINTS.REVIEW_UPDATE(reviewId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "PATCH",

@@ -1,5 +1,5 @@
-import { env } from "@/env";
 import { getErrorMessage } from "@/helpers/get-error";
+import { API_ENDPOINTS } from "@/services/api-config";
 import { TResult } from "@/types";
 import { ICategory } from "@/types/category-type";
 import { cookies } from "next/headers";
@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 export const categoryServices = {
   getAllCategories: async (): Promise<TResult<ICategory[]>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/categories/`;
+      const API_URL = API_ENDPOINTS.CATEGORIES;
       const response = await fetch(API_URL, {
         next: { tags: ["categories"] },
       });
@@ -24,7 +24,7 @@ export const categoryServices = {
 
   createCategory: async (name: string): Promise<TResult<ICategory>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/categories/`;
+      const API_URL = API_ENDPOINTS.CATEGORIES;
       const cookieStore = await cookies();
 
       const response = await fetch(API_URL, {
@@ -51,7 +51,7 @@ export const categoryServices = {
     data: Omit<ICategory, "id" | "slug">,
   ): Promise<TResult<ICategory>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/categories/${id}`;
+      const API_URL = API_ENDPOINTS.CATEGORY_UPDATE(id);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "PUT",
@@ -73,7 +73,7 @@ export const categoryServices = {
 
   deleteCategory: async (id: string): Promise<TResult<null>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/categories/${id}`;
+      const API_URL = API_ENDPOINTS.CATEGORY_DELETE(id);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "DELETE",
@@ -94,7 +94,7 @@ export const categoryServices = {
 
   getCategoryById: async (id: string): Promise<TResult<ICategory>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/categories/id/${id}`;
+      const API_URL = API_ENDPOINTS.CATEGORY_BY_ID(id);
       const response = await fetch(API_URL, {
         next: { tags: ["categories"] },
       });
@@ -111,7 +111,7 @@ export const categoryServices = {
 
   getCategoryBySlug: async (slug: string): Promise<TResult<ICategory>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/categories/${slug}`;
+      const API_URL = API_ENDPOINTS.CATEGORY_BY_SLUG(slug);
       const response = await fetch(API_URL, {
         next: { tags: ["categories"] },
       });

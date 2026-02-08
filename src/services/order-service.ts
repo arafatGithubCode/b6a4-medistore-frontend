@@ -1,12 +1,12 @@
-import { env } from "@/env";
 import { getErrorMessage } from "@/helpers/get-error";
+import { API_ENDPOINTS } from "@/services/api-config";
 import { IOrder, IOrderPayload, TResult } from "@/types";
 import { cookies } from "next/headers";
 
 export const orderServices = {
   placeOrder: async (orderData: IOrderPayload): Promise<TResult<IOrder>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/orders/`;
+      const API_URL = API_ENDPOINTS.ORDERS;
 
       const cookieStore = await cookies();
 
@@ -43,7 +43,7 @@ export const orderServices = {
   },
   getOrderById: async (orderId: string): Promise<TResult<IOrder>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/orders/${orderId}`;
+      const API_URL = API_ENDPOINTS.ORDER_BY_ID(orderId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "GET",
@@ -74,7 +74,7 @@ export const orderServices = {
   },
   getAllOrdersOfCustomer: async (): Promise<TResult<IOrder[]>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/orders/`;
+      const API_URL = API_ENDPOINTS.ORDERS;
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "GET",
@@ -106,7 +106,7 @@ export const orderServices = {
   },
   getAllOrdersOfSeller: async (): Promise<TResult<IOrder[]>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/orders/seller`;
+      const API_URL = API_ENDPOINTS.ORDER_SELLER;
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "GET",
@@ -142,7 +142,7 @@ export const orderServices = {
     status: string,
   ): Promise<TResult<IOrder>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/orders/${orderId}/status`;
+      const API_URL = API_ENDPOINTS.ORDER_STATUS(orderId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "PATCH",
@@ -176,7 +176,7 @@ export const orderServices = {
 
   cancelOrder: async (orderId: string): Promise<TResult<IOrder>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/orders/${orderId}/cancel`;
+      const API_URL = API_ENDPOINTS.ORDER_CANCEL(orderId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "PATCH",

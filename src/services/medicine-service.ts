@@ -1,5 +1,5 @@
-import { env } from "@/env";
 import { getErrorMessage } from "@/helpers/get-error";
+import { API_ENDPOINTS } from "@/services/api-config";
 import { FilterOptions, ICacheOptions, TResult } from "@/types";
 import { IMedicine } from "@/types/medicine-type";
 import { cookies } from "next/headers";
@@ -10,7 +10,7 @@ export const medicineService = {
     cacheOptions?: ICacheOptions,
   ): Promise<TResult<IMedicine[]>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/`;
+      const API_URL = API_ENDPOINTS.MEDICINES;
       const url = new URL(API_URL);
 
       if (filter) {
@@ -60,7 +60,7 @@ export const medicineService = {
     >,
   ): Promise<TResult<IMedicine>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/`;
+      const API_URL = API_ENDPOINTS.MEDICINES;
       const cookieStore = await cookies();
 
       const response = await fetch(API_URL, {
@@ -86,7 +86,7 @@ export const medicineService = {
   },
   getMedicineBySellerId: async (sellerId: string) => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/seller/${sellerId}`;
+      const API_URL = API_ENDPOINTS.MEDICINE_BY_SELLER(sellerId);
       const response = await fetch(API_URL, {
         cache: "no-store",
       });
@@ -112,7 +112,7 @@ export const medicineService = {
 
   getMedicineById: async (medicineId: string) => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/${medicineId}`;
+      const API_URL = API_ENDPOINTS.MEDICINE_BY_ID(medicineId);
       const response = await fetch(API_URL, {
         cache: "no-store",
       });
@@ -143,7 +143,7 @@ export const medicineService = {
     >,
   ): Promise<TResult<IMedicine>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/${medicineId}`;
+      const API_URL = API_ENDPOINTS.MEDICINE_BY_ID(medicineId);
       const cookieStore = await cookies();
 
       const response = await fetch(API_URL, {
@@ -179,7 +179,7 @@ export const medicineService = {
 
   deleteMedicineById: async (medicineId: string): Promise<TResult<null>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/medicines/${medicineId}`;
+      const API_URL = API_ENDPOINTS.MEDICINE_BY_ID(medicineId);
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
         method: "DELETE",

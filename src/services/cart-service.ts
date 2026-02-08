@@ -1,5 +1,5 @@
-import { env } from "@/env";
 import { getErrorMessage } from "@/helpers/get-error";
+import { API_ENDPOINTS } from "@/services/api-config";
 import { ICart, TResult } from "@/types";
 import { cookies } from "next/headers";
 
@@ -9,7 +9,7 @@ export const cartService = {
     quantity: number;
   }): Promise<TResult> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/carts/`;
+      const API_URL = API_ENDPOINTS.CARTS;
       const items = {
         items: [
           {
@@ -54,7 +54,7 @@ export const cartService = {
 
   getCurrentUserCart: async (): Promise<TResult<ICart>> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/carts/`;
+      const API_URL = API_ENDPOINTS.CARTS;
 
       const cookieStore = await cookies();
 
@@ -88,7 +88,7 @@ export const cartService = {
 
   deleteCartItem: async (medicineId: string): Promise<TResult> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/carts/item`;
+      const API_URL = API_ENDPOINTS.CART_ITEM;
 
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {
@@ -125,7 +125,7 @@ export const cartService = {
     quantity: number,
   ): Promise<TResult> => {
     try {
-      const API_URL = `${env.BACKEND_URL}/api/v1/carts/decrement/${medicineId}`;
+      const API_URL = API_ENDPOINTS.CART_DECREMENT(medicineId);
 
       const cookieStore = await cookies();
       const response = await fetch(API_URL, {

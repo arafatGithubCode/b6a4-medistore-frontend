@@ -26,10 +26,10 @@ const DeleteMedicine = ({ medicineId }: { medicineId: string }) => {
     }
   };
   return (
-    <Button variant="destructive" size="icon" onClick={handleDeleteMedicine}>
+    <Button variant="outline" size="icon" onClick={handleDeleteMedicine}>
       <Trash
         aria-disabled={loading}
-        className="h-4 w-4 text-slate-600 dark:text-slate-300"
+        className="h-4 w-4 text-red-600 dark:text-red-300"
       />
     </Button>
   );
