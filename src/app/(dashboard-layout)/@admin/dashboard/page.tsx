@@ -95,7 +95,9 @@ const Dashboard = async ({
 
   // get medicine
   if (tab === "medicines") {
-    const { data, success } = await getMedicinesAction();
+    const { data, success } = await getMedicinesAction(undefined, {
+      cache: "no-store",
+    });
     return (
       <div className="p-2 mt-5">
         <h3>All Medicines</h3>

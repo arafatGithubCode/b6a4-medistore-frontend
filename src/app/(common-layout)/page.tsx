@@ -5,7 +5,9 @@ import Footer from "@/components/layout/footer";
 import Link from "next/link";
 
 const HomePage = async () => {
-  const { data, success } = await getMedicinesAction();
+  const { data, success } = await getMedicinesAction(undefined, {
+    cache: "no-store",
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
