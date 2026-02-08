@@ -1,5 +1,6 @@
 "use client";
 
+import Popup from "@/components/common/popup";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -49,7 +50,11 @@ const CategoryCard = ({ category }: { category: ICategory }) => {
           <DeleteCategory id={category.id} />
         </CardFooter>
       </Card>
-      {open && <UpdateCategory category={category} onClose={onClose} />}
+      {open && (
+        <Popup onClose={onClose}>
+          <UpdateCategory category={category} onClose={onClose} />
+        </Popup>
+      )}
     </div>
   );
 };

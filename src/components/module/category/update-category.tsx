@@ -3,7 +3,6 @@
 import { updateCategoryAction } from "@/actions/category";
 import FormField from "@/components/common/form-field";
 import SubmitButton from "@/components/common/submit-button";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -70,79 +69,69 @@ const UpdateCategory = ({
     },
   });
   return (
-    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/50 z-50 p-4">
-      <div className="w-full max-w-sm mx-auto bg-white dark:bg-black">
-        <Card>
-          <CardHeader>
-            <CardTitle>Update Category</CardTitle>
-            <CardDescription>
-              Use this form to update the category details.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form
-              id="update-category-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                form.handleSubmit();
-              }}
-            >
-              <form.Field
-                name="name"
-                children={(field) => <FormField field={field} />}
-              />
+    <Card>
+      <CardHeader>
+        <CardTitle>Update Category</CardTitle>
+        <CardDescription>
+          Use this form to update the category details.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          id="update-category-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <form.Field
+            name="name"
+            children={(field) => <FormField field={field} />}
+          />
 
-              <form.Field
-                name="isActive"
-                children={(field) => (
-                  <Field
-                    className="mt-3"
-                    data-invalid={
-                      field.state.meta.isTouched && !field.state.meta.isValid
-                    }
-                  >
-                    <FieldLabel>Status</FieldLabel>
-                    <Select
-                      value={isActive ? "active" : "inactive"}
-                      onValueChange={(value) => {
-                        field.setValue(value === "active");
-                        setIsActive(value === "active");
-                      }}
-                    >
-                      <SelectTrigger className="w-45">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    {field.state.meta.isTouched &&
-                      !field.state.meta.isValid && (
-                        <FieldError errors={field.state.meta.errors} />
-                      )}
-                  </Field>
+          <form.Field
+            name="isActive"
+            children={(field) => (
+              <Field
+                className="mt-3"
+                data-invalid={
+                  field.state.meta.isTouched && !field.state.meta.isValid
+                }
+              >
+                <FieldLabel>Status</FieldLabel>
+                <Select
+                  value={isActive ? "active" : "inactive"}
+                  onValueChange={(value) => {
+                    field.setValue(value === "active");
+                    setIsActive(value === "active");
+                  }}
+                >
+                  <SelectTrigger className="w-45">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="inactive">Inactive</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {field.state.meta.isTouched && !field.state.meta.isValid && (
+                  <FieldError errors={field.state.meta.errors} />
                 )}
-              />
-            </form>
-          </CardContent>
-          <CardFooter>
-            <div className="flex justify-between gap-5">
-              <Button variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <SubmitButton
-                formName="update-category-form"
-                label="Update Category"
-                loading={loading}
-              />
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
-    </div>
+              </Field>
+            )}
+          />
+        </form>
+      </CardContent>
+      <CardFooter>
+        <SubmitButton
+          formName="update-category-form"
+          label="Update Category"
+          loading={loading}
+        />
+      </CardFooter>
+    </Card>
   );
 };
 

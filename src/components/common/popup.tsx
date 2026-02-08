@@ -15,7 +15,7 @@ const Popup = ({
         {children}
         <Button
           variant="outline"
-          className="absolute top-4 right-4 rounded-full w-8 h-8 p-0 flex items-center justify-center"
+          className="absolute top-4 right-4 z-10 rounded-full w-8 h-8 p-0 flex items-center justify-center text-foreground"
           onClick={onClose}
         >
           <X />

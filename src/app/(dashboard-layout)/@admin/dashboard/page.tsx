@@ -160,11 +160,23 @@ const Dashboard = async ({
 
   if (tab === "task") {
     return (
-      <div className="container mx-auto py-8">
-        <p className="text-center text-gray-500">
-          The backend is completed but frontend is under development.
-        </p>
-        <p>Due to time shortest</p>
+      <div className="container mx-auto py-12 px-4">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-slate-200/70 bg-gradient-to-br from-white via-slate-50 to-white p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-900 text-white">
+            <span className="text-lg font-semibold">i</span>
+          </div>
+          <h2 className="text-2xl font-semibold text-slate-900">
+            Feature coming soon
+          </h2>
+          <p className="mt-3 text-slate-600">
+            This is available for customer and seller dashboards. The admin UI
+            is planned but not completed yet. I will implement it when I have
+            time.
+          </p>
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-500">
+            Status: In progress
+          </div>
+        </div>
       </div>
     );
   }
